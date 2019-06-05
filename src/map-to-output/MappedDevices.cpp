@@ -51,10 +51,10 @@ namespace {
         {
             for(const std::regex& thisRegex : regexes)
             {
-                std::cmatch m;
+                std::smatch m;
                 if(std::regex_search(thisLine, m, thisRegex))
                 {
-                    matchingLines.emplace_back(thisLine);
+                    matchingLines.emplace(thisLine);
                 }
             }
         }
@@ -85,6 +85,6 @@ MappedDevices::MappedDevices(
 MappedDevices::MappedDevices(
         const std::vector<std::string>& deviceRegexes,
         const std::string& printedDeviceList)
-    : getMatches(stringsToRegexes(deviceRegexes),
-                 stringToLines(warnIfDeviceListIsEmpty(printedDeviceList)))
+    : mappedDevices(getMatches(stringsToRegexes(deviceRegexes),
+                 stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
 {}
