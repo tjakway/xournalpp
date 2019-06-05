@@ -17,13 +17,16 @@ public:
 
     const unsigned int mappedAreaOutlineWidth;
 
+    const int mappedAreaOutlineColor;
+
     //master constructor
     MapToOutputConfig(
         const std::string&,
         const std::vector<std::string>&,
         bool,
         bool,
-        unsigned int);
+        unsigned int,
+        int);
 
     MapToOutputConfig(
         const std::vector<std::string>&);
@@ -35,5 +38,6 @@ public:
         static const bool restoreDesktopMappingOnError,
                           drawMappedAreaOutline;
         static const unsigned int mappedAreaOutlineWidth;
+        static const int mappedAreaOutlineColor;
     };
 };
