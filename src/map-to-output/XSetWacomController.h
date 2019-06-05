@@ -2,7 +2,7 @@
 
 #include <mutex>
 
-#include "MapToOutputConfig.h"
+#include "map-to-output/MapToOutputConfig.h"
 
 class XSetWacomController
 {

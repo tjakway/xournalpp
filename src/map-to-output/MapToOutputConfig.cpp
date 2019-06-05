@@ -1,4 +1,4 @@
-#include "MapToOutputConfig.h"
+#include "map-to-output/MapToOutputConfig.h"
 
 const std::string MapToOutputConfig::Defaults::xsetwacomExecutable = 
     "xsetwacom";

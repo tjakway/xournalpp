@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_set>
 
-#include "MapToOutputConfig.h"
+#include "map-to-output/MapToOutputConfig.h"
 
 class MappedDevices
 {

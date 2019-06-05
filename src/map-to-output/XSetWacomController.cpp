@@ -1,4 +1,4 @@
-#include "XSetWacomController.h"
+#include "map-to-output/XSetWacomController.h"
 
 
 static std::mutex XSetWacomController::exeMutex;
