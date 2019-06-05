@@ -34,5 +34,6 @@ MapToOutputConfig::MapToOutputConfig(
             _deviceRegexes,
             Defaults::restoreDesktopMappingOnError,
             Defaults::drawMappedAreaOutline,
-            Defaults::mappedAreaOutlineWidth)
+            Defaults::mappedAreaOutlineWidth,
+            Defaults::mappedAreaOutlineColor)
 {}
