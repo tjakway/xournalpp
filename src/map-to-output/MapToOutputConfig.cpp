@@ -1,6 +1,6 @@
 #include "map-to-output/MapToOutputConfig.h"
 
-const std::string MapToOutputConfig::Defaults::xsetwacomExecutable = 
+const std::string MapToOutputConfig::Defaults::xsetWacomExecutable = 
     "xsetwacom";
 
 const bool MapToOutputConfig::Defaults::restoreDesktopMappingOnError =

@@ -9,7 +9,7 @@ class MapToOutputConfig final
 public:
     using Ptr = std::shared_ptr<const MapToOutputConfig>;
 
-    const std::string xsetwacomExecutable;
+    const std::string xsetWacomExecutable;
     const std::vector<std::string> deviceRegexes;
     
     const bool restoreDesktopMappingOnError,
@@ -31,7 +31,7 @@ public:
     class Defaults
     {
     public:
-        static const std::string xsetwacomExecutable;
+        static const std::string xsetWacomExecutable;
         static const bool restoreDesktopMappingOnError,
                           drawMappedAreaOutline;
         static const unsigned int mappedAreaOutlineWidth;
