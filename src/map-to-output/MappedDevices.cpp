@@ -3,6 +3,9 @@
 #include <sstream>
 #include <regex>
 
+//for g_warning
+#include <glib.h>
+
 namespace {
     //see https://stackoverflow.com/questions/6444842/efficient-way-to-check-if-stdstring-has-only-spaces
     bool stringIsNonWhitespace(const std::string& str)
@@ -39,10 +42,10 @@ namespace {
         return regexes;
     }
 
-    std::vector<std::string> getMatches(std::vector<std::regex> regexes,
+    MappedDeviceSet getMatches(std::vector<std::regex> regexes,
                                         std::vector<std::string> lines)
     {
-        std::unordered_set<std::string> matchingLines;
+        MappedDeviceSet matchingLines;
 
         for(const std::string& thisLine : lines)
         {
@@ -58,6 +61,16 @@ namespace {
 
         return matchingLines;
     }
+
+    std::string warnIfDeviceListIsEmpty(const std::string& deviceList)
+    {
+        if(!stringIsNonWhitespace(deviceList))
+        {
+            g_warning("xsetwacom device list is empty, "
+                    "no device regexes will match");
+        }
+        return deviceList;
+    }
 }
 
 
@@ -72,6 +85,6 @@ MappedDevices::MappedDevices(
 MappedDevices::MappedDevices(
         const std::vector<std::string>& deviceRegexes,
         const std::string& printedDeviceList)
-{
-
-}
+    : getMatches(stringsToRegexes(deviceRegexes),
+                 stringToLines(warnIfDeviceListIsEmpty(printedDeviceList)))
+{}
