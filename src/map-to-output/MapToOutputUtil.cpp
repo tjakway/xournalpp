@@ -3,18 +3,18 @@
 #include <stdexcept>
 #include <sstream>
 
-class BadDimensionsError
+class BadDimensionsError : public std::runtime_error
 {
 public:
     BadDimensionsError(const std::string& x)
-        : runtime_error(x)
+        : std::runtime_error(x)
     {}
 };
 
 void MapToOutputUtil::checkDimensions(int x, int y, int width, int height)
 {
     std::ostringstream ss;
-    ss << "One or more invalid dimensions: " <<
+    ss << "One or more invalid dimensions: "
         << "x=" << x << ", y=" << y
         << ", w=" << width << ", h=" << height;
 
