@@ -8,5 +8,8 @@ class XSetWacomDraw
 {
 protected:
     void drawOutline(const MapToOutputConfig&,
-            cairo_t*, int, int, int, int);
+            cairo_t*, double, double, double, double);
+
+    void drawOutline(double, int,
+            cairo_t*, double, double, double, double);
 };
