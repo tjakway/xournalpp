@@ -22,7 +22,8 @@ public:
         const std::string&,
         const std::vector<std::string>&,
         bool,
-        bool);
+        bool,
+        unsigned int);
 
     MapToOutputConfig(
         const std::vector<std::string>&);
