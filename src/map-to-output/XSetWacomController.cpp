@@ -1,7 +1,7 @@
 #include "map-to-output/XSetWacomController.h"
 
 
-static std::mutex XSetWacomController::exeMutex;
+std::mutex XSetWacomController::exeMutex;
 
 XSetWacomController::XSetWacomController(MapToOutputConfig::Ptr _configPtr)
     : configPtr(_configPtr)

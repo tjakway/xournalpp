@@ -13,18 +13,18 @@ namespace {
         return str.find_first_not_of(' ') != std::string::npos;
     }
 
-    vector<std::string> stringToLines(const std::string& str)
+    std::vector<std::string> stringToLines(const std::string& str)
     {
-        vector<std::string> lines;
+        std::vector<std::string> lines;
 
         //see https://stackoverflow.com/questions/13172158/c-split-string-by-line
         std::stringstream ss(str);
         std::string thisLine;
         while(std::getline(ss, thisLine, '\n'))
         {
-            if(stringIsNonWhitespace(to))
+            if(stringIsNonWhitespace(thisLine))
             {
-                lines.emplace_back(to);
+                lines.emplace_back(thisLine);
             }
         }
 
@@ -42,14 +42,14 @@ namespace {
         return regexes;
     }
 
-    MappedDeviceSet getMatches(std::vector<std::regex> regexes,
+    MappedDevices::MappedDeviceSet getMatches(std::vector<std::regex> regexes,
                                         std::vector<std::string> lines)
     {
-        MappedDeviceSet matchingLines;
+        MappedDevices::MappedDeviceSet matchingLines;
 
         for(const std::string& thisLine : lines)
         {
-            for(const std::regex& thisRegex)
+            for(const std::regex& thisRegex : regexes)
             {
                 std::cmatch m;
                 if(std::regex_search(thisLine, m, thisRegex))
