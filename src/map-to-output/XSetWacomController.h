@@ -10,9 +10,6 @@ class XSetWacomController
 
     static std::mutex exeMutex;
 
-
-    void checkDimensions(int x, int y, int width, int height);
-
 public:
     XSetWacomController(MapToOutputConfig::Ptr);
 
