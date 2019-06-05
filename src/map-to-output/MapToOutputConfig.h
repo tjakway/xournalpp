@@ -12,12 +12,16 @@ public:
     const std::string xsetwacomExecutable;
     const std::vector<std::string> deviceRegexes;
     
-    const bool restoreDesktopMappingOnError;
+    const bool restoreDesktopMappingOnError,
+               drawMappedAreaOutline;
+
+    const unsigned int mappedAreaOutlineWidth;
 
     //master constructor
     MapToOutputConfig(
         const std::string&,
         const std::vector<std::string>&,
+        bool,
         bool);
 
     MapToOutputConfig(
@@ -27,6 +31,8 @@ public:
     {
     public:
         static const std::string xsetwacomExecutable;
-        static const bool restoreDesktopMappingOnError;
+        static const bool restoreDesktopMappingOnError,
+                          drawMappedAreaOutline;
+        static const unsigned int mappedAreaOutlineWidth;
     };
 };
