@@ -58,6 +58,7 @@ file (GLOB_RECURSE xournalpp_SOURCES_RECURSE
   plugin/*.cpp
   undo/*.cpp
   view/*.cpp
+  map-to-output/*.cpp
 )
 
 # Here GLOB_RECURSE wouldn't be safe
