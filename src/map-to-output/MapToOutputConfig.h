@@ -29,6 +29,9 @@ public:
     //whether to check dimensions at runtime
     const bool checkDimensions;
 
+    //the "unmapped" mapping
+    const std::string mapToOutputResetName;
+
     //master constructor
     MapToOutputConfig(
         const std::string&,
@@ -37,7 +40,8 @@ public:
         bool,
         double,
         int,
-        bool);
+        bool,
+        const std::string&);
 
     MapToOutputConfig(
         const DeviceRegexes&);
@@ -51,5 +55,6 @@ public:
         static const double mappedAreaOutlineWidth;
         static const int mappedAreaOutlineColor;
         static const bool checkDimensions;
+        static const std::string mapToOutputResetName;
     };
 };
