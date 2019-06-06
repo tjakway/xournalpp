@@ -5,6 +5,7 @@
 #include <unordered_set>
 
 #include "map-to-output/MapToOutputConfig.h"
+#include "map-to-output/MapToOutputError.h"
 
 class MappedDevices
 {
@@ -38,20 +39,26 @@ public:
     MainDeviceError(const std::string& x)
         : MapToOutputError(x)
     {}
+
+    virtual ~MainDeviceError() {}
 };
 
-class TooManyMainDevicesError : public MapToOutputError
+class TooManyMainDevicesError : public MainDeviceError
 {
 public:
     TooManyMainDevicesError(const std::string& x)
         : MainDeviceError(x)
     {}
+
+    virtual ~TooManyMainDevicesError() {}
 };
 
-class NoMainDeviceError : public MapToOutputError
+class NoMainDeviceError : public MainDeviceError
 {
 public:
     NoMainDeviceError(const std::string& x)
         : MainDeviceError(x)
     {}
+
+    virtual ~NoMainDeviceError() {}
 };

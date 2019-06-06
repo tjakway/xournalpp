@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include <unordered_set>
 #include <string>
 
 class MapToOutputConfig final
@@ -10,7 +10,14 @@ public:
     using Ptr = std::shared_ptr<const MapToOutputConfig>;
 
     const std::string xsetWacomExecutable;
-    const std::vector<std::string> deviceRegexes;
+
+    struct DeviceRegexes
+    {
+        const std::unordered_set<std::string> deviceRegexes;
+        const std::string mainDevice;
+    };
+    const DeviceRegexes deviceRegexes;
+
     
     const bool restoreDesktopMappingOnError,
                drawMappedAreaOutline;
@@ -25,7 +32,7 @@ public:
     //master constructor
     MapToOutputConfig(
         const std::string&,
-        const std::vector<std::string>&,
+        const DeviceRegexes&,
         bool,
         bool,
         double,
@@ -33,7 +40,7 @@ public:
         bool);
 
     MapToOutputConfig(
-        const std::vector<std::string>&);
+        const DeviceRegexes&);
 
     class Defaults
     {

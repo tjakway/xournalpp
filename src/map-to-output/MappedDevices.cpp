@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <regex>
+#include <algorithm>
 
 #include <memory>
 
@@ -35,13 +36,16 @@ namespace {
         return lines;
     }
 
-    std::vector<std::regex> stringsToRegexes(std::vector<std::string> strs)
+    template <typename it>
+    std::vector<std::regex> stringsToRegexes(it begin, it end)
     {
         std::vector<std::regex> regexes;
-        for(const std::string& thisStr : strs)
-        {
+        std::for_each(begin, end, 
+                [&regexes](const std::string& thisStr){
+                
+            //construct the regex in place
             regexes.emplace_back(thisStr);
-        }
+        });
 
         return regexes;
     }
@@ -82,11 +86,14 @@ namespace {
                         mainDeviceRegexStr << 
                         " but already found main device named" <<
                         *mainDevice;
-                    throw TooManyMainDevices(ss.str());
+                    throw TooManyMainDevicesError(ss.str());
                 }
                 else
                 {
                     mainDevice = std::unique_ptr<std::string>(new std::string(thisLine));
+                    
+                    //the main device is implicitly one of the matching devices
+                    matchingLines.emplace(thisLine);
                 }
             }
         }
@@ -94,7 +101,7 @@ namespace {
         //make sure we found a main device
         if(mainDevice)
         {
-            return MappedDeviceSet(matchingLines, *mainDevice);
+            return MappedDevices::MappedDeviceSet{matchingLines, *mainDevice};
         }
         else
         {
@@ -128,6 +135,9 @@ MappedDevices::MappedDevices(
 MappedDevices::MappedDevices(
         const MapToOutputConfig::DeviceRegexes& deviceRegexes,
         const std::string& printedDeviceList)
-    : mappedDevices(getMatches(stringsToRegexes(deviceRegexes),
-                 stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
+    : mappedDevices(
+            getMatches(deviceRegexes.mainDevice,
+                stringsToRegexes(deviceRegexes.deviceRegexes.cbegin(), 
+                    deviceRegexes.deviceRegexes.cend()),
+            stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
 {}

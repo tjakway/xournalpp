@@ -16,7 +16,7 @@ const bool MapToOutputConfig::Defaults::checkDimensions = false;
 
 MapToOutputConfig::MapToOutputConfig(
     const std::string& _xsetWacomExecutable,
-    const std::vector<std::string>& _deviceRegexes,
+    const DeviceRegexes& _deviceRegexes,
     bool _restoreDesktopMappingOnError,
     bool _drawMappedAreaOutline,
     double _mappedAreaOutlineWidth,
@@ -32,7 +32,7 @@ MapToOutputConfig::MapToOutputConfig(
 {}
 
 MapToOutputConfig::MapToOutputConfig(
-        const std::vector<std::string>& _deviceRegexes)
+        const DeviceRegexes& _deviceRegexes)
     : MapToOutputConfig(
             Defaults::xsetWacomExecutable, 
             _deviceRegexes,
