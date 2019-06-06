@@ -64,8 +64,7 @@ std::string XSetWacomShell::runXSetWacom(
 
     std::unique_ptr<GError, GErrorDeleter> launchError = newGErrorPointer();
 
-    std::unique_ptr<char> stdoutBuf(new char[outputStreamBufSize]);
-    std::unique_ptr<char> stderrBuf(new char[outputStreamBufSize]);
+    std::unique_ptr<char> stdoutBuf, stderrBuf; 
     Gint exitStatus = 0;
 
     //need argvVector to be in scope while argv is active
