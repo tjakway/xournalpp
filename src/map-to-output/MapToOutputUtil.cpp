@@ -1,13 +1,12 @@
 #include "map-to-output/MapToOutputUtil.h"
 
-#include <stdexcept>
-#include <sstream>
+#include "map-to-output/MapToOutputError.h"
 
-class BadDimensionsError : public std::runtime_error
+class BadDimensionsError : public MapToOutputError
 {
 public:
     BadDimensionsError(const std::string& x)
-        : std::runtime_error(x)
+        : MapToOutputError(x)
     {}
 };
 
