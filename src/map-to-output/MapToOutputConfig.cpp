@@ -13,7 +13,7 @@ const int MapToOutputConfig::Defaults::mappedAreaOutlineColor = 0xFF0000;
 
 const bool MapToOutputConfig::Defaults::checkDimensions = false;
 
-const bool MapToOutputConfig::Defaults::mapToOutputResetName = "desktop";
+const std::string MapToOutputConfig::Defaults::mapToOutputResetName = "desktop";
 
 
 MapToOutputConfig::MapToOutputConfig(
