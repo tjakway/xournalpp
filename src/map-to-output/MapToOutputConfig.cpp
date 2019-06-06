@@ -11,6 +11,8 @@ const bool MapToOutputConfig::Defaults::drawMappedAreaOutline = true;
 const double MapToOutputConfig::Defaults::mappedAreaOutlineWidth = 1;
 const int MapToOutputConfig::Defaults::mappedAreaOutlineColor = 0xFF0000;
 
+const bool MapToOutputConfig::Defaults::checkDimensions = false;
+
 
 MapToOutputConfig::MapToOutputConfig(
     const std::string& _xsetWacomExecutable,
@@ -18,13 +20,15 @@ MapToOutputConfig::MapToOutputConfig(
     bool _restoreDesktopMappingOnError,
     bool _drawMappedAreaOutline,
     double _mappedAreaOutlineWidth,
-    int _mappedAreaOutlineColor)
+    int _mappedAreaOutlineColor,
+    bool _checkDimensions)
     : xsetWacomExecutable(_xsetWacomExecutable),
     deviceRegexes(_deviceRegexes),
     restoreDesktopMappingOnError(_restoreDesktopMappingOnError),
     drawMappedAreaOutline(_drawMappedAreaOutline),
     mappedAreaOutlineWidth(_mappedAreaOutlineWidth),
-    mappedAreaOutlineColor(_mappedAreaOutlineColor)
+    mappedAreaOutlineColor(_mappedAreaOutlineColor),
+    checkDimensions(_checkDimensions)
 {}
 
 MapToOutputConfig::MapToOutputConfig(
@@ -35,5 +39,6 @@ MapToOutputConfig::MapToOutputConfig(
             Defaults::restoreDesktopMappingOnError,
             Defaults::drawMappedAreaOutline,
             Defaults::mappedAreaOutlineWidth,
-            Defaults::mappedAreaOutlineColor)
+            Defaults::mappedAreaOutlineColor,
+            Defaults::checkDimensions)
 {}

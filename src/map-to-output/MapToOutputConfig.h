@@ -19,6 +19,9 @@ public:
 
     const int mappedAreaOutlineColor;
 
+    //whether to check dimensions at runtime
+    const bool checkDimensions;
+
     //master constructor
     MapToOutputConfig(
         const std::string&,
