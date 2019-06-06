@@ -3,6 +3,7 @@
 #include <sstream>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <glib.h>
 
@@ -21,16 +22,14 @@ namespace {
     };
 
 
-    //do this instead of allocating GError on the stack in
-    //case g_error_new has to do any kind of setup
     std::unique_ptr<GError, GErrorDeleter> newGErrorPointer()
     {
-        return std::unique_ptr<GError, GErrorDeleter>(g_error_new());
+        return std::unique_ptr<GError, GErrorDeleter>(new GError());
     }
 }
 
 //16384 bytes should be plenty
-static const unsigned int outputStreamBufSize = 2^14
+static const unsigned int outputStreamBufSize = 2^14;
 
 std::vector<std::string> XSetWacomShell::buildArgv(const std::vector<std::string>& args)
 {

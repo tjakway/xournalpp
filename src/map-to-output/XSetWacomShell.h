@@ -2,8 +2,10 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "map-to-output/MapToOutputError.h"
+#include "map-to-output/MapToOutputConfig.h"
 
 class XSetWacomShell
 {
