@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include <glib/glib.h>
+#include <glib.h>
 
 namespace {
     //ensure GError is free'd correctly
