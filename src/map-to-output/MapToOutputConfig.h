@@ -15,7 +15,7 @@ public:
     const bool restoreDesktopMappingOnError,
                drawMappedAreaOutline;
 
-    const unsigned int mappedAreaOutlineWidth;
+    const double mappedAreaOutlineWidth;
 
     const int mappedAreaOutlineColor;
 
@@ -25,7 +25,7 @@ public:
         const std::vector<std::string>&,
         bool,
         bool,
-        unsigned int,
+        double,
         int);
 
     MapToOutputConfig(
@@ -37,7 +37,7 @@ public:
         static const std::string xsetWacomExecutable;
         static const bool restoreDesktopMappingOnError,
                           drawMappedAreaOutline;
-        static const unsigned int mappedAreaOutlineWidth;
+        static const double mappedAreaOutlineWidth;
         static const int mappedAreaOutlineColor;
     };
 };

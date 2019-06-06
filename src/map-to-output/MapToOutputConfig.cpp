@@ -8,7 +8,7 @@ const bool MapToOutputConfig::Defaults::restoreDesktopMappingOnError =
 
 const bool MapToOutputConfig::Defaults::drawMappedAreaOutline = true;
 
-const unsigned int MapToOutputConfig::Defaults::mappedAreaOutlineWidth = 1;
+const double MapToOutputConfig::Defaults::mappedAreaOutlineWidth = 1;
 const int MapToOutputConfig::Defaults::mappedAreaOutlineColor = 0xFF0000;
 
 
@@ -17,7 +17,7 @@ MapToOutputConfig::MapToOutputConfig(
     const std::vector<std::string>& _deviceRegexes,
     bool _restoreDesktopMappingOnError,
     bool _drawMappedAreaOutline,
-    unsigned int _mappedAreaOutlineWidth,
+    double _mappedAreaOutlineWidth,
     int _mappedAreaOutlineColor)
     : xsetWacomExecutable(_xsetWacomExecutable),
     deviceRegexes(_deviceRegexes),
