@@ -10,6 +10,8 @@ class XSetWacomController
 
     static std::mutex exeMutex;
 
+protected:
+
 public:
     XSetWacomController(MapToOutputConfig::Ptr);
 
