@@ -4,5 +4,5 @@ class MapToOutputUtil
 {
     MapToOutputUtil() = delete;
 public:
-    static void checkDimensions(int, int, int, int);
+    static void checkDimensions(bool, int, int, int, int);
 };

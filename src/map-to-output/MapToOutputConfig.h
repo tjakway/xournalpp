@@ -29,7 +29,8 @@ public:
         bool,
         bool,
         double,
-        int);
+        int,
+        bool);
 
     MapToOutputConfig(
         const std::vector<std::string>&);
@@ -42,5 +43,6 @@ public:
                           drawMappedAreaOutline;
         static const double mappedAreaOutlineWidth;
         static const int mappedAreaOutlineColor;
+        static const bool checkDimensions;
     };
 };

@@ -4,15 +4,16 @@
 
 void XSetWacomDraw::drawOutline(double lineWidth,
         int color,
+        bool checkDimensions,
         cairo_t* cairo, double x, double y, double w, double h)
 {
-    MapToOutputUtil::checkDimensions(x, y, w, h);
+    MapToOutputUtil::checkDimensions(checkDimensions, x, y, w, h);
 
-    const char* funcName = __func__;
     const auto drawRect = 
-        [cairo](double _x, double _y, double _w, double _h)
+        [cairo, checkDimensions](double _x, double _y,
+                                 double _w, double _h)
         {
-            MapToOutputUtil::checkDimensions(_x, _y, _w, _h);
+            MapToOutputUtil::checkDimensions(checkDimensions, _x, _y, _w, _h);
             cairo_rectangle(cairo, _x, _y, _w, _h);
         };
 
@@ -35,5 +36,6 @@ void XSetWacomDraw::drawOutline(const MapToOutputConfig& config,
     drawOutline(
             config.mappedAreaOutlineWidth,
             config.mappedAreaOutlineColor,
+            config.checkDimensions,
             cairo, x, y, w, h);
 }

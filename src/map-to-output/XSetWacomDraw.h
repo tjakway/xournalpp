@@ -10,6 +10,6 @@ protected:
     void drawOutline(const MapToOutputConfig&,
             cairo_t*, double, double, double, double);
 
-    void drawOutline(double, int,
+    void drawOutline(double, int, bool,
             cairo_t*, double, double, double, double);
 };
