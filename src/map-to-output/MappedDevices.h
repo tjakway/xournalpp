@@ -9,13 +9,17 @@
 class MappedDevices
 {
 public:
-    using MappedDeviceSet = std::unordered_set<std::string>;
+    struct MappedDeviceSet
+    {
+        const std::unordered_set<std::string> mappedDevices;
+        const std::string mainDevice;
+    };
 
 private:
     const MappedDeviceSet mappedDevices;
 
 public:
-    MappedDevices(const std::vector<std::string>&,
+    MappedDevices(const MapToOutputConfig::DeviceRegexes&,
                   const std::string&);
 
     MappedDevices(const MapToOutputConfig&,
@@ -24,4 +28,30 @@ public:
     virtual ~MappedDevices() {}
 
     const MappedDeviceSet getMappedDevices() const;
+};
+
+
+//mapped device related errors
+class MainDeviceError : public MapToOutputError
+{
+public:
+    MainDeviceError(const std::string& x)
+        : MapToOutputError(x)
+    {}
+};
+
+class TooManyMainDevicesError : public MapToOutputError
+{
+public:
+    TooManyMainDevicesError(const std::string& x)
+        : MainDeviceError(x)
+    {}
+};
+
+class NoMainDeviceError : public MapToOutputError
+{
+public:
+    NoMainDeviceError(const std::string& x)
+        : MainDeviceError(x)
+    {}
 };

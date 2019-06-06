@@ -1,10 +1,14 @@
 #include "map-to-output/MappedDevices.h"
+#include "map-to-output/MapToOutputError.h"
 
 #include <sstream>
 #include <regex>
 
+#include <memory>
+
 //for g_warning
 #include <glib.h>
+
 
 namespace {
     //see https://stackoverflow.com/questions/6444842/efficient-way-to-check-if-stdstring-has-only-spaces
@@ -42,13 +46,19 @@ namespace {
         return regexes;
     }
 
-    MappedDevices::MappedDeviceSet getMatches(std::vector<std::regex> regexes,
+    MappedDevices::MappedDeviceSet getMatches(
+                                        const std::string& mainDeviceRegexStr,
+                                        std::vector<std::regex> regexes,
                                         std::vector<std::string> lines)
     {
-        MappedDevices::MappedDeviceSet matchingLines;
+        const std::regex mainDeviceRegex(mainDeviceRegexStr);
+
+        std::unique_ptr<std::string> mainDevice;
+        std::unordered_set<std::string> matchingLines;
 
         for(const std::string& thisLine : lines)
         {
+            //check if we should map the device with this name
             for(const std::regex& thisRegex : regexes)
             {
                 std::smatch m;
@@ -57,9 +67,42 @@ namespace {
                     matchingLines.emplace(thisLine);
                 }
             }
+
+
+            //check if this is the main device
+            std::smatch n;
+            if(std::regex_search(thisLine, n, mainDeviceRegex))
+            {
+                //make sure there's only 1 main device
+                if(mainDevice)
+                {
+                    std::ostringstream ss;
+                    ss << "Too many main devices, " <<
+                        thisLine << " matches main device regex " <<
+                        mainDeviceRegexStr << 
+                        " but already found main device named" <<
+                        *mainDevice;
+                    throw TooManyMainDevices(ss.str());
+                }
+                else
+                {
+                    mainDevice = std::unique_ptr<std::string>(new std::string(thisLine));
+                }
+            }
         }
 
-        return matchingLines;
+        //make sure we found a main device
+        if(mainDevice)
+        {
+            return MappedDeviceSet(matchingLines, *mainDevice);
+        }
+        else
+        {
+            std::ostringstream ss;
+            ss << "No device found matching main device regex " <<
+                mainDeviceRegexStr;
+            throw NoMainDeviceError(ss.str());
+        }
     }
 
     std::string warnIfDeviceListIsEmpty(const std::string& deviceList)
@@ -83,7 +126,7 @@ MappedDevices::MappedDevices(
 
 
 MappedDevices::MappedDevices(
-        const std::vector<std::string>& deviceRegexes,
+        const MapToOutputConfig::DeviceRegexes& deviceRegexes,
         const std::string& printedDeviceList)
     : mappedDevices(getMatches(stringsToRegexes(deviceRegexes),
                  stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
