@@ -1,3 +1,4 @@
+#include "map-to-output/MappedRectangle.h"
 #include "util/Rectangle.h"
 
 #include <gtk/gtk.h>

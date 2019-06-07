@@ -15,7 +15,7 @@ private:
     std::string runXSetWacom(const std::vector<std::string>& args);
 
     std::vector<std::string> buildArgv(const std::vector<std::string>&);
-    std::unique_ptr<char*> argvToPointers(const std::vector<std::string>&);
+    std::unique_ptr<const char*> argvToPointers(const std::vector<std::string>&);
 
     std::pair<std::string, std::string> getDimensions(const std::string&);
 
@@ -30,6 +30,7 @@ public:
 //error classes
 class XSetWacomShellError : public MapToOutputError
 {
+public:
     XSetWacomShellError(const std::string& x)
         : MapToOutputError(x)
     {}
