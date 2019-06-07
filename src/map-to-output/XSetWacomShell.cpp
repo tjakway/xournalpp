@@ -5,6 +5,13 @@
 #include <string>
 #include <vector>
 
+//for strlen
+#include <cstdlib>
+//for memcpy
+#include <cstring>
+
+#include <cassert>
+
 #include <glib.h>
 
 namespace {
@@ -21,11 +28,51 @@ namespace {
         }
     };
 
-
-    std::unique_ptr<GError, GErrorDeleter> newGErrorPointer()
+    class ArgvWrapper
     {
-        return std::unique_ptr<GError, GErrorDeleter>(new GError());
-    }
+        char** argv;
+        const std::vector<std::string>::size_type len;
+
+    public:
+        ArgvWrapper(const std::vector<std::string>& argvVector)
+            : len(argvVector.size())
+        {
+            argv = new char*[len + 1];
+            //don't forget to null-terminate the array
+            argv[len] = nullptr;
+            assert(strlen(*argv) == len);
+
+
+            for(std::vector<std::string>::size_type i = 0; 
+                    i < argvVector.size(); i++)
+            {
+                const std::string& thisString = argvVector[i];
+                argv[i] = new char[thisString.size() + 1];
+                memcpy(argv[i], thisString.c_str(), thisString.size());
+                argv[i][len] = '\0';
+            }
+        }
+
+        char** getArgv() const
+        {
+            return argv;
+        }
+
+        std::vector<std::string>::size_type size() const
+        {
+            return len;
+        }
+
+        virtual ~ArgvWrapper()
+        {
+            for(std::vector<std::string>::size_type i = 0; i < len; i++)
+            {
+               delete[] argv[i];
+            }
+            delete[] argv;
+        }
+
+    };
 }
 
 //16384 bytes should be plenty
@@ -45,30 +92,37 @@ std::vector<std::string> XSetWacomShell::buildArgv(const std::vector<std::string
 }
 
 
-
-std::unique_ptr<char*> XSetWacomShell::argvToPointers(const std::vector<std::string>& argvVector)
-{
-    //turn our vector of arguments into a char**
-    std::unique_ptr<char*> argv(new char[argvVector.size()]);
-    for(std::vector<std::string>::size_t i = 0; i < argvVector.size(); i++)
-    {
-        argv[i] = argvVector[i].c_str();
-    }
-    return argv;
-}
-
 std::string XSetWacomShell::runXSetWacom(
             const std::vector<std::string>& args)
 { 
 
-    std::unique_ptr<GError, GErrorDeleter> launchError = newGErrorPointer();
-
-    std::unique_ptr<char> stdoutBuf, stderrBuf; 
-    Gint exitStatus = 0;
-
     //need argvVector to be in scope while argv is active
     std::vector<std::string> argvVector = buildArgv(args);
-    std::unique_ptr<char*> argv = argvToPointers(argvVector);
+    ArgvWrapper argv(argvVector);
+
+
+
+    GError* _launchError;
+    gint exitStatus = 0;
+
+
+    char *_stdoutBuf, *_stderrBuf;
+    const auto res = g_spawn_sync(
+        nullptr, //working directory
+        argv.getArgv(),
+        nullptr, //inherit parent environment
+        G_SPAWN_SEARCH_PATH,
+        nullptr, //no setup function
+        nullptr, //no setup function args
+        &_stdoutBuf,
+        &_stderrBuf,
+        &exitStatus,
+        &_launchError);
+
+    std::unique_ptr<char> stdoutBuf(_stdoutBuf),
+        stderrBuf(_stderrBuf);
+
+    std::unique_ptr<GError, GErrorDeleter> launchError(_launchError);
 
     //format and throw exception
     const auto err = [&stdoutBuf, &stderrBuf, &exitStatus, &argvVector]
@@ -78,7 +132,7 @@ std::string XSetWacomShell::runXSetWacom(
         ss << "Error running `";
         for(const auto& thisArg : argvVector)
         {
-            ss << "thisArg ";
+            ss << "thisArg " << thisArg;
         }
         //just ignore the dangling space
         ss << "`:" << std::endl
@@ -90,31 +144,22 @@ std::string XSetWacomShell::runXSetWacom(
         throw XSetWacomShellError(ss.str());
     };
 
-
-
-    if(!g_spawn_sync(
-        nullptr, //working directory
-        argv.get(),
-        nullptr, //inherit parent environment
-        G_SPAWN_SEARCH_PATH,
-        nullptr, //no setup function
-        nullptr, //no setup function args
-        &stdoutBuf.get(),
-        &stderrBuf.get(),
-        &exitStatus,
-        &gError.get()))
+    if(!res)
     {
-        err(*gError);
+        err(*launchError);
         //silence return warnings
         return nullptr;
     }
     else
     {
-        //make sure the process exited successfully before returning
-        auto exitErrorPtr = newGErrorPointer();
-        if(!g_spawn_check_exit_status(exitStatus, &exitErrorPtr.get()))
+        GError* _checkExitError;
+        const auto exitRes = g_spawn_check_exit_status(exitStatus, &_checkExitError);
+
+        std::unique_ptr<GError, GErrorDeleter> checkExitError(_checkExitError);
+
+        if(!exitRes)
         {
-            err(*exitErrorPtr);
+            err(*checkExitError);
             return nullptr;
         }
         else
