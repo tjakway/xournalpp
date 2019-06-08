@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 class BadDimensionsError : public MapToOutputError
 {
@@ -41,7 +42,7 @@ std::pair<double, double> MapToOutputUtil::getCairoProjection(cairo_t* cairo)
     return std::make_pair(x, y);
 }
 
-//from https://mail.gnome.org/archives/gtk-app-devel-list/2004-November/msg00028.html
+//slightly modified from https://mail.gnome.org/archives/gtk-app-devel-list/2004-November/msg00028.html
 GdkRectangle MapToOutputUtil::widgetGetRectInScreen(GtkWidget *widget)
 {
     GdkRectangle r;
@@ -49,15 +50,20 @@ GdkRectangle MapToOutputUtil::widgetGetRectInScreen(GtkWidget *widget)
     GdkRectangle    extents;
     GdkWindow       *window;
 
+
     window = gtk_widget_get_parent_window(widget); /* getting parent window */
     gdk_window_get_root_origin(window, &x,&y); /* parent's left-top screen coordinates */
-    gdk_drawable_get_size(window, &w,&h); /* parent's width and height */
+    w = gdk_window_get_width(window);
+    h = gdk_window_get_height(window);
     gdk_window_get_frame_extents(window, &extents); /* parent's extents (including decorations) */
-    r.x = x + (extents.width-w)/2 + widget->allocation.x; /* calculating x (assuming: left border size == right border size) */
-    r.y = y + (extents.height-h)-(extents.width-w)/2 + widget->allocation.y; /* calculating y (assuming: left border size == right border size == bottom border size) */
 
-    r.width = widget->allocation.width;
-    r.height = widget->allocation.height;
+    GtkAllocation widgetAllocation{};
+    gtk_widget_get_allocation(widget, &widgetAllocation);
+    r.x = x + (extents.width-w)/2 + widgetAllocation.x; /* calculating x (assuming: left border size == right border size) */
+    r.y = y + (extents.height-h)-(extents.width-w)/2 + widgetAllocation.y; /* calculating y (assuming: left border size == right border size == bottom border size) */
+
+    r.width = widgetAllocation.width;
+    r.height = widgetAllocation.height;
 
     return r;
 }
