@@ -7,6 +7,10 @@ Rectangle::Rectangle()
 	XOJ_INIT_TYPE(Rectangle);
 }
 
+Rectangle::Rectangle(const Rectangle& other)
+    : Rectangle(other.x, other.y, other.width, other.height)
+{}
+
 Rectangle::Rectangle(double x, double y, double width, double height)
 {
 	XOJ_INIT_TYPE(Rectangle);

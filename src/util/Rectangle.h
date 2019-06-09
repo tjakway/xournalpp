@@ -20,6 +20,7 @@ class Rectangle
 public:
 	Rectangle();
 	Rectangle(Range& rect);
+        Rectangle(const Rectangle&);
 	Rectangle(double x, double y, double width, double height);
 	virtual ~Rectangle();
 
