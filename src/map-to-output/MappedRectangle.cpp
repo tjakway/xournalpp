@@ -29,16 +29,18 @@ namespace {
 
 MappedRectangle::MappedRectangle(
         const Rectangle& _mapToOutputRect,
-        const Rectangle& _cairoOutlineRect)
+        const Rectangle& _cairoOutlineRect,
+        const Offsets& _offsets)
     mapToOutputRect(new Rectangle(_mapToOutputRect)),
-    cairoOutlineRect(new Rectangle(_cairoOutlineRect))
+    cairoOutlineRect(new Rectangle(_cairoOutlineRect)),
+    offsets(_offsets)
 {}
 
 MappedRectangle::MappedRectangle(
     cairo_t* cairo,
     double aspectRatio,
     const Rectangle& winAbs,
-    const Offsets& offsets);
+    const Offsets& offsets)
 {
 
 }
@@ -46,6 +48,11 @@ MappedRectangle::MappedRectangle(
 MappedRectangle::MappedRectangle(const MappedRectangle& other)
     : MappedRectangle(*other.mapToOutputRect, *other.cairoOutlineRect)
 {}
+
+bool MappedRectangle::valid() const
+{
+    return mapToOutputRect == nullptr;
+}
 
 Rectangle* MappedRectangle::getMapToOutputRect() const
 {
@@ -57,9 +64,13 @@ Rectangle* MappedRectangle::getCairoOutlineRect() const
     return cairoOutlineRect.get();
 }
 
-MappedRectangle MappedRectangle::move(int amount) const
+MappedRectangle MappedRectangle::move(int upDown, int leftRight) const
 {
-    if(amount == 0)
+    if(upDown == 0 && leftRight == 0)
+    {
+        return *this;
+    }
+    else
     {
         
     }

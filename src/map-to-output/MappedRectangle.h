@@ -9,7 +9,16 @@
 
 class MappedRectangle
 {
+public:
+    struct Offsets
+    {
+        const unsigned int fromTop,
+              fromLeft, fromRight;
+    };
+
+private:
     std::unique_ptr<Rectangle> mapToOutputRect, cairoOutlineRect;
+    const Offsets offsets;
 
 
     static std::unique_ptr<Rectangle> mkMapToOutputRect(
@@ -21,13 +30,9 @@ class MappedRectangle
 
     static void checkOffsets(const Rectangle&, const Offsets&);
 
-    MappedRectangle(const Rectangle&, const Rectangle&);
+    MappedRectangle(const Rectangle&, const Rectangle&,
+            const Offsets&);
 public:
-    struct Offsets
-    {
-        const unsigned int fromTop,
-              fromLeft, fromRight;
-    };
 
     MappedRectangle(
             cairo_t*,
@@ -43,7 +48,9 @@ public:
     Rectangle* getMapToOutputRect() const;
     Rectangle* getCairoOutlineRect() const;
 
-    MappedRectangle move(int amount) const;
+    MappedRectangle move(int upDown, int leftRight) const;
+
+    bool valid() const;
 };
 
 class MappedRectangleError : public MapToOutputError
