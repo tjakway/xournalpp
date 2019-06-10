@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <cairo/cairo.h>
+#include <gtk/gtk.h>
 
 class MappedRectangle
 {
@@ -18,11 +19,12 @@ public:
 
 private:
     std::unique_ptr<Rectangle> mapToOutputRect, cairoOutlineRect;
+    const double aspectRatio;
     const Offsets offsets;
 
 
     static std::unique_ptr<Rectangle> mkMapToOutputRect(
-            const Rectangle&, const Offsets&);
+            const Rectangle&, double, const Offsets&);
 
     static void checkCairoOutlineRect(const Rectangle&);
     static void checkMapToOutputRect(const Rectangle&);
@@ -30,14 +32,20 @@ private:
 
     static void checkOffsets(const Rectangle&, const Offsets&);
 
-    MappedRectangle(const Rectangle&, const Rectangle&,
+    //master constructor
+    MappedRectangle(const Rectangle&, 
+            const Rectangle&,
+            double,
             const Offsets&);
 public:
+    MappedRectangle(
+            GtkWidget*,
+            double aspectRatio,
+            const Offsets&);
 
     MappedRectangle(
-            cairo_t*,
+            const Rectangle&,
             double aspectRatio,
-            const Rectangle& winAbs,
             const Offsets&);
 
     MappedRectangle(const MappedRectangle&);
@@ -49,9 +57,11 @@ public:
     Rectangle* getMapToOutputRect() const;
     Rectangle* getCairoOutlineRect() const;
 
-    MappedRectangle move(int upDown, int leftRight) const;
+    MappedRectangle move(const Offsets&) const;
 
     bool valid() const;
+
+    Offsets getOffsets() const { return offsets; }
 };
 
 class MappedRectangleError : public MapToOutputError

@@ -141,3 +141,13 @@ MappedDevices::MappedDevices(
                     deviceRegexes.deviceRegexes.cend()),
             stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
 {}
+
+MappedDevices::MappedDevices(const MappedDevices& other)
+    : mappedDevices(other.getMappedDevices())
+{}
+
+
+MappedDevices::MappedDeviceSet MappedDevices::getMappedDevices() const
+{
+    return mappedDevices;
+}

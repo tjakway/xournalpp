@@ -1,4 +1,5 @@
 #include "map-to-output/MappedRectangle.h"
+#include "map-to-output/MapToOutputUtil.h"
 #include "util/Rectangle.h"
 
 #include <gtk/gtk.h>
@@ -12,7 +13,7 @@ namespace {
         std::ostringstream ss;
         ss << "{ x=" <<
             r.x << ", y=" << r.y <<
-            ", w=" << r.w << ", h=" r.h << " }";
+            ", w=" << r.width << ", h=" << r.height << " }";
 
         return ss.str();
     }
@@ -28,32 +29,52 @@ namespace {
     }
 }
 
+//master constructor
 MappedRectangle::MappedRectangle(
         const Rectangle& _mapToOutputRect,
         const Rectangle& _cairoOutlineRect,
+        double _aspectRatio,
         const Offsets& _offsets)
-    mapToOutputRect(new Rectangle(_mapToOutputRect)),
+    : mapToOutputRect(new Rectangle(_mapToOutputRect)),
     cairoOutlineRect(new Rectangle(_cairoOutlineRect)),
+    aspectRatio(_aspectRatio),
     offsets(_offsets)
 {}
 
 MappedRectangle::MappedRectangle(
-    cairo_t* cairo,
+    const Rectangle& _cairoOutlineRect,
+    double _aspectRatio,
+    const Offsets& _offsets)
+    : MappedRectangle(
+        *mkMapToOutputRect(_cairoOutlineRect, _aspectRatio, _offsets),
+        _cairoOutlineRect,
+        _aspectRatio,
+        _offsets)
+{}
+
+MappedRectangle::MappedRectangle(
+    GtkWidget* widget,
     double aspectRatio,
-    const Rectangle& winAbs,
     const Offsets& offsets)
-{
+    : MappedRectangle(
+            MapToOutputUtil::getAbsoluteWidgetRect(widget),
+            aspectRatio,
+            offsets)
+{}
 
-}
-
+//move constructor
 MappedRectangle::MappedRectangle(MappedRectangle&& other)
     : mapToOutputRect(std::move(other.mapToOutputRect)),
     cairoOutlineRect(std::move(other.cairoOutlineRect)),
+    aspectRatio(other.aspectRatio),
     offsets(other.offsets)
 {}
 
+//copy constructor
 MappedRectangle::MappedRectangle(const MappedRectangle& other)
-    : MappedRectangle(*other.mapToOutputRect, *other.cairoOutlineRect)
+    : MappedRectangle(*other.mapToOutputRect, 
+            *other.cairoOutlineRect,
+            other.aspectRatio, other.offsets)
 {}
 
 bool MappedRectangle::valid() const
@@ -71,21 +92,15 @@ Rectangle* MappedRectangle::getCairoOutlineRect() const
     return cairoOutlineRect.get();
 }
 
-MappedRectangle MappedRectangle::move(int upDown, int leftRight) const
+MappedRectangle MappedRectangle::move(const Offsets& newOffsets) const
 {
-    if(upDown == 0 && leftRight == 0)
-    {
-        return *this;
-    }
-    else
-    {
-        
-    }
+    return MappedRectangle(
+            *cairoOutlineRect, aspectRatio, newOffsets);
 }
 
 void MappedRectangle::checkRect(const std::string& name, const Rectangle& r)
 {
-    if(r.x < 0 || r.y < 0 || r.w <= 0 || r.h <= 0)
+    if(r.x < 0 || r.y < 0 || r.width <= 0 || r.height <= 0)
     {
         std::ostringstream ss;
         ss << "Expected Rectangle " << name << 
@@ -109,7 +124,6 @@ void MappedRectangle::checkMapToOutputRect(const Rectangle& rect)
 void MappedRectangle::checkOffsets(const Rectangle& cairoOutlineRect,
         const Offsets& offsets)
 {
-    
     if((cairoOutlineRect.width - offsets.fromLeft - offsets.fromRight) <= 0)
     {
         std::ostringstream ss;
@@ -120,7 +134,7 @@ void MappedRectangle::checkOffsets(const Rectangle& cairoOutlineRect,
 }
 
 std::unique_ptr<Rectangle> MappedRectangle::mkMapToOutputRect(
-        const Rectangle& cairoOutlineRect, const Offsets& offsets)
+        const Rectangle& cairoOutlineRect, double aspectRatio, const Offsets& offsets)
 {
     checkCairoOutlineRect(cairoOutlineRect);
     checkOffsets(cairoOutlineRect, offsets);

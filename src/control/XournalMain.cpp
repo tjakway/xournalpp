@@ -26,6 +26,10 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#include <chrono>
+#include <thread>
+#include <iostream>
+
 #if __linux__
 #include <libgen.h>
 #endif
@@ -422,6 +426,24 @@ int XournalMain::run(int argc, char* argv[])
 		control->getWindow()->getXournal()->layoutPages();
 	});
 
+
+        const auto f = [win]() {
+            std::cout << "thomas thread launched" << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+            auto vR = win->getLayout()->getVisibleRect();
+            std::cout << "MAINWINDOW LAYOUT: " <<
+                "getLayoutWidth: " << 
+                win->getLayout()->getLayoutWidth() << "; "
+                "getLayoutHeight: " << 
+                win->getLayout()->getLayoutHeight() << ";" <<
+                "getVisibleRect(): "
+                 << "vR.x=" << vR.x << 
+                 " vR.y=" << vR.y <<
+                 " vR.w=" << vR.width <<
+                 " vR.h=" << vR.height << std::endl;
+        };
+        std::thread t (f);
+
 	gtk_main();
 
 	control->saveSettings();
@@ -436,6 +458,8 @@ int XournalMain::run(int argc, char* argv[])
 
 	ToolbarColorNames::getInstance().saveFile(colorNameFile);
 	ToolbarColorNames::freeInstance();
+
+
 
 	return 0;
 }

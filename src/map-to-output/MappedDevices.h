@@ -26,9 +26,11 @@ public:
     MappedDevices(const MapToOutputConfig&,
                   const std::string&);
 
+    MappedDevices(const MappedDevices&);
+
     virtual ~MappedDevices() {}
 
-    const MappedDeviceSet getMappedDevices() const;
+    MappedDeviceSet getMappedDevices() const;
 };
 
 

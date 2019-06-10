@@ -30,6 +30,9 @@ mark_as_advanced (FORCE DEBUG_COMPILE)
 
 if (DEBUG_COMPILE)
   add_definitions (-Wall)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        set(CMAKE_CXX_FLAGS "-D_GLIBCXX_DEBUG -fstandalone-debug ${CMAKE_CXX_FLAGS}")
+    endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif (DEBUG_COMPILE)
 
 if (DEV_ENABLE_GCOV)
