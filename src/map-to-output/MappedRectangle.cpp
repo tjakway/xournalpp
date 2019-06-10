@@ -3,6 +3,7 @@
 
 #include <gtk/gtk.h>
 
+#include <utility>
 #include <sstream>
 
 namespace {
@@ -44,6 +45,12 @@ MappedRectangle::MappedRectangle(
 {
 
 }
+
+MappedRectangle::MappedRectangle(MappedRectangle&& other)
+    : mapToOutputRect(std::move(other.mapToOutputRect)),
+    cairoOutlineRect(std::move(other.cairoOutlineRect)),
+    offsets(other.offsets)
+{}
 
 MappedRectangle::MappedRectangle(const MappedRectangle& other)
     : MappedRectangle(*other.mapToOutputRect, *other.cairoOutlineRect)

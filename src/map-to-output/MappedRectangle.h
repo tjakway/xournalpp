@@ -41,6 +41,7 @@ public:
             const Offsets&);
 
     MappedRectangle(const MappedRectangle&);
+    MappedRectangle(MappedRectangle&&);
 
     virtual ~MappedRectangle() {}
 
