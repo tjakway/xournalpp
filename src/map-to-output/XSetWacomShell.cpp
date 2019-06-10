@@ -75,9 +75,6 @@ namespace {
     };
 }
 
-//16384 bytes should be plenty
-static const unsigned int outputStreamBufSize = 2^14;
-
 std::vector<std::string> XSetWacomShell::buildArgv(const std::vector<std::string>& args)
 {
     //insert the executable name at the front and copy in args
