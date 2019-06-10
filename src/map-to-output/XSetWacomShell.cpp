@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <iterator>
+#include <algorithm>
 
 //for strlen
 #include <cstdlib>
@@ -168,8 +170,41 @@ std::string XSetWacomShell::runXSetWacom(
 }
 
 
-std::pair<std::string, std::string> XSetWacomShell::getDimensions(
+std::pair<int, int> XSetWacomShell::getDimensions(
         const std::string& deviceName)
 {
+    const std::vector<std::string> args {
+        "--get", deviceName, "Area"
+    };
 
+    const std::string stdoutRes = runXSetWacom(args);
+    std::istringstream iss(stdoutRes);
+
+    vector<string> tokens{istream_iterator<string>{iss},
+                          istream_iterator<string>{}};
+
+    const unsigned int expectedTokens = 4;
+    if(tokens.size() != expectedTokens)
+    {
+        std::ostringstream ss;
+        ss << "Error running xsetwacom with args `";
+        for(const auto& x : args)
+        {
+            ss << x << " ";
+        }
+        ss << "` " << "expected " << expectedTokens << " in stdout"
+            << " but got " << tokens.size();
+
+        throw XSetWacomShellError(ss.str());
+    }
+    else
+    {
+        int w = stoi(tokens.at(2));
+        int h = stoi(tokens.at(3));
+
+        assert(w > 0);
+        assert(h > 0);
+
+        return std::make_pair(w, h);
+    }
 }
