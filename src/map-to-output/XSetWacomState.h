@@ -21,5 +21,7 @@ public:
 
     Rectangle* getMappedArea();
 
+    void clearMappedArea();
+
     virtual ~XSetWacomState() {}
 };

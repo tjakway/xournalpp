@@ -14,13 +14,16 @@ void XSetWacomState::moveMappedRectangle(const MappedRectangle::Offsets& newOffs
 {
     std::lock_guard<std::mutex> {stateMutex};
     
-    std::unique_ptr<MappedRectangle> newMappedRectangle(
-            new MappedRectangle(mappedRectangle->move(newOffsets)));
-
-    //make sure we're not replacing a valid rect with an invalid one
-    if(!(mappedRectangle->valid() && !newMappedRectangle->valid()))
+    if(mappedRectangle)
     {
-        mappedRectangle = std::move(newMappedRectangle);
+        std::unique_ptr<MappedRectangle> newMappedRectangle(
+                new MappedRectangle(mappedRectangle->move(newOffsets)));
+
+        //make sure we're not replacing a valid rect with an invalid one
+        if(!(mappedRectangle->valid() && !newMappedRectangle->valid()))
+        {
+            mappedRectangle = std::move(newMappedRectangle);
+        }
     }
 }
 
@@ -39,5 +42,18 @@ MappedDevices* XSetWacomState::getMappedDevices()
 Rectangle* XSetWacomState::getMappedArea() 
 {
     std::lock_guard<std::mutex> {stateMutex};
-    return mappedRectangle->getMapToOutputRect();
+    if(mappedRectangle)
+    {
+        return mappedRectangle->getMapToOutputRect();
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+void XSetWacomState::clearMappedArea()
+{
+    std::lock_guard<std::mutex> {stateMutex};
+    mappedRectangle = nullptr;
 }
