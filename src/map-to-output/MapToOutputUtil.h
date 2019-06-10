@@ -1,7 +1,11 @@
 #pragma once
 
+#include "util/Rectangle.h"
+
 #include <utility>
+
 #include <cairo/cairo.h>
+#include <gtk/gtk.h>
 
 class MapToOutputUtil
 {
@@ -9,9 +13,13 @@ class MapToOutputUtil
 public:
     static void checkDimensions(bool, int, int, int, int);
 
-    static std::pair<double, double> getCairoProjection(cairo_t*);
+    static void getCairoProjection(cairo_t*);
 
-    GdkRectangle widgetGetRectInScreen(GtkWidget *widget);
+    static GdkRectangle widgetGetRectInScreen(GtkWidget *widget);
+    static void widgetGetTranslateCoordinates(GtkWidget*);
+    static void printWindowOrigin(GtkWidget*);
 
+    static std::pair<int, int> getAbsoluteWidgetPosition(GtkWidget*);
+    static Rectangle getAbsoluteWidgetRect(GtkWidget*);
 };
 

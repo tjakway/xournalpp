@@ -3,6 +3,10 @@
 #include "map-to-output/MapToOutputError.h"
 
 #include <sstream>
+#include <iostream>
+#include <utility>
+#include <tuple>
+#include <cassert>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -33,16 +37,18 @@ void MapToOutputUtil::checkDimensions(
     }
 }
 
-std::pair<double, double> MapToOutputUtil::getCairoProjection(cairo_t* cairo)
+void MapToOutputUtil::getCairoProjection(cairo_t* cairo)
 {
     double x = -1, y = -1;
 
     cairo_user_to_device(cairo, &x, &y);
 
-    return std::make_pair(x, y);
+    std::cout << "cairo_user_to_device: (" << x << ", " << y << ")" << std::endl;
 }
 
-//slightly modified from https://mail.gnome.org/archives/gtk-app-devel-list/2004-November/msg00028.html
+/**
+ * slightly modified from https://mail.gnome.org/archives/gtk-app-devel-list/2004-November/msg00028.html
+ */
 GdkRectangle MapToOutputUtil::widgetGetRectInScreen(GtkWidget *widget)
 {
     GdkRectangle r;
@@ -66,4 +72,53 @@ GdkRectangle MapToOutputUtil::widgetGetRectInScreen(GtkWidget *widget)
     r.height = widgetAllocation.height;
 
     return r;
+}
+
+/**
+ * from https://stackoverflow.com/a/2089257/389943
+ */
+void MapToOutputUtil::widgetGetTranslateCoordinates(GtkWidget* widget)
+{
+    gint wx = -1, wy = -1;
+    gtk_widget_translate_coordinates(widget, gtk_widget_get_toplevel(widget), 0, 0, &wx, &wy);
+
+    std::cout << "gtk_widget_translate_coordinates: (" << 
+        wx << ", " << wy << ")" << std::endl;
+}
+    
+
+void MapToOutputUtil::printWindowOrigin(GtkWidget* widget)
+{
+    assert(widget != nullptr);
+    gint wx = -1, wy = -1;
+    std::tie(wx, wy) = getAbsoluteWidgetPosition(widget);
+
+    std::cout << "gdk_window_get_origin: " << "(" << wx << ", " << wy << ")" << std::endl;
+}
+
+
+std::pair<int, int> MapToOutputUtil::getAbsoluteWidgetPosition(GtkWidget* widget)
+{
+    assert(widget != nullptr);
+    gint wx = -1, wy = -1;
+    gdk_window_get_origin (gtk_widget_get_window (widget), &wx, &wy);
+
+    return std::make_pair(wx, wy);
+}
+
+Rectangle MapToOutputUtil::getAbsoluteWidgetRect(GtkWidget* widget)
+{
+    assert(widget != nullptr);
+    GtkAllocation alloc{};
+
+    gtk_widget_get_allocation(widget, &alloc);
+
+    int x = -1, y = -1;
+    std::tie(x, y) = getAbsoluteWidgetPosition(widget);
+
+    assert(x >= 0);
+    assert(y >= 0);
+    assert(alloc.width > 0);
+    assert(alloc.height > 0);
+    return Rectangle(x, y, alloc.width, alloc.height);
 }
