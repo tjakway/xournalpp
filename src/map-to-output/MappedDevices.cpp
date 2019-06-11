@@ -1,5 +1,6 @@
 #include "map-to-output/MappedDevices.h"
 #include "map-to-output/MapToOutputError.h"
+#include "map-to-output/MapToOutputUtil.h"
 
 #include <sstream>
 #include <regex>
@@ -21,7 +22,7 @@ namespace {
         std::string thisLine;
         while(std::getline(ss, thisLine, '\n'))
         {
-            if(stringIsNonWhitespace(thisLine))
+            if(MapToOutputUtil::stringIsNonWhitespace(thisLine))
             {
                 lines.emplace_back(thisLine);
             }
