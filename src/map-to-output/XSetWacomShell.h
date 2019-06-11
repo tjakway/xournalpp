@@ -15,6 +15,8 @@ class XSetWacomShell
     //use a mutex to serialize invocations of xsetwacom
     static std::mutex exeMutex;
 
+    const std::string xsetWacomExecutable;
+
     std::string runXSetWacom(const std::vector<std::string>& args);
 
     std::vector<std::string> buildArgv(const std::vector<std::string>&);
@@ -23,6 +25,8 @@ class XSetWacomShell
     std::pair<int, int> getDimensions(const std::string&);
 
 public:
+    XSetWacomShell(const std::string&);
+
     double getMainDeviceAspectRatio(const std::string&);
     void setMapToOutput(const std::string&, Rectangle*);
 

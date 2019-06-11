@@ -83,7 +83,7 @@ std::vector<std::string> XSetWacomShell::buildArgv(const std::vector<std::string
 {
     //insert the executable name at the front and copy in args
     std::vector<std::string> argv;
-    argv.emplace_back(config->xsetWacomExecutable);
+    argv.emplace_back(xsetWacomExecutable);
     for(const auto& x : args)
     {
         argv.emplace_back(x);
@@ -245,3 +245,8 @@ void XSetWacomShell::setMapToOutput(
 
     runXSetWacom(args);
 }
+
+
+XSetWacomShell::XSetWacomShell(const std::string& _xsetWacomExecutable)
+    : xsetWacomExecutable(_xsetWacomExecutable)
+{}
