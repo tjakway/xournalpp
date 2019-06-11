@@ -8,8 +8,6 @@ class XSetWacomController
 {
     const MapToOutputConfig::Ptr configPtr;
 
-    static std::mutex exeMutex;
-
 protected:
 
 public:
