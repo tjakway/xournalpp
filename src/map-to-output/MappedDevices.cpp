@@ -109,7 +109,7 @@ namespace {
 
     std::string warnIfDeviceListIsEmpty(const std::string& deviceList)
     {
-        if(!stringIsNonWhitespace(deviceList))
+        if(!MapToOutputUtil::stringIsNonWhitespace(deviceList))
         {
             g_warning("xsetwacom device list is empty, "
                     "no device regexes will match");
