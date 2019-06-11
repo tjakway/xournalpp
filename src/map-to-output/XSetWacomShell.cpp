@@ -1,4 +1,5 @@
 #include "map-to-output/XSetWacomShell.h"
+#include "map-to-output/MapToOutputUtil.h"
 
 #include <sstream>
 #include <memory>
@@ -244,6 +245,29 @@ void XSetWacomShell::setMapToOutput(
     }
 
     runXSetWacom(args);
+}
+
+std::vector<std::string> XSetWacomShell::getDevices()
+{
+    //run the xsetwacom command
+    const std::string stdoutRes = 
+        runXSetWacom(std::vector<std::string>{ "--list", "--devices" });
+
+    //divide the output into lines
+    std::vector<std::string> lines;
+    std::string line;
+    std::istringstream iss {stdoutRes};
+
+    while(std::getline(iss, line))
+    {
+        //insert nonempty lines
+        if(MapToOutputUtil::stringIsNonWhitespace(line))
+        {
+            lines.emplace_back(line);
+        }
+    }
+
+    return lines;
 }
 
 
