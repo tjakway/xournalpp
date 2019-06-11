@@ -6,6 +6,7 @@
 #include "map-to-output/MappedDevices.h"
 #include "map-to-output/XSetWacomShell.h"
 
+#include <gtk/gtk.h>
 
 class XSetWacomController
 {
@@ -21,6 +22,8 @@ public:
     virtual ~XSetWacomController() {}
 
     void setMapToOutput(int x, int y, int width, int height);
+    void setMapToOutput(GtkWidget*);
 
     void onWindowChanged(int x, int y, int width, int height);
+    void onWindowChanged(GtkWidget*);
 };
