@@ -16,6 +16,8 @@
 
 #include <glib.h>
 
+std::mutex XSetWacomShell::exeMutex {};
+
 namespace {
     //ensure GError is free'd correctly
     class GErrorDeleter
@@ -94,6 +96,7 @@ std::vector<std::string> XSetWacomShell::buildArgv(const std::vector<std::string
 std::string XSetWacomShell::runXSetWacom(
             const std::vector<std::string>& args)
 { 
+    std::lock_guard<std::mutex> {exeMutex};
 
     //need argvVector to be in scope while argv is active
     std::vector<std::string> argvVector = buildArgv(args);

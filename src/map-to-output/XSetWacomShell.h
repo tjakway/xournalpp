@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <mutex>
 
 #include "util/Rectangle.h"
 
@@ -11,8 +12,8 @@
 
 class XSetWacomShell
 {
-private:
-    MapToOutputConfig::Ptr config;
+    //use a mutex to serialize invocations of xsetwacom
+    static std::mutex exeMutex;
 
     std::string runXSetWacom(const std::vector<std::string>& args);
 
@@ -22,8 +23,6 @@ private:
     std::pair<int, int> getDimensions(const std::string&);
 
 public:
-    XSetWacomShell(MapToOutputConfig::Ptr);
-
     double getMainDeviceAspectRatio(const std::string&);
     void setMapToOutput(const std::string&, Rectangle*);
 
