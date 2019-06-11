@@ -23,6 +23,7 @@ public:
     XSetWacomShell(MapToOutputConfig::Ptr);
 
     double getMainDeviceAspectRatio(const std::string&);
+    void setMapToOutput(const std::string&, Rectangle*);
 
     virtual ~XSetWacomShell() {}
 };

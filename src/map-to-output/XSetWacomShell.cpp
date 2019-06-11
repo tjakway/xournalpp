@@ -208,3 +208,36 @@ std::pair<int, int> XSetWacomShell::getDimensions(
         return std::make_pair(w, h);
     }
 }
+
+
+double XSetWacomShell::getMainDeviceAspectRatio(const std::string& deviceName)
+{
+    int w, h;
+    std::tie(w, h) = getDimensions(deviceName);
+
+    return static_cast<double(w) / static_cast<double>(h);
+}
+
+void XSetWacomShell::setMapToOutput(
+        const std::string& deviceName,
+        Rectangle* rect)
+{
+    std::vector<std::string> args {
+        "--set", deviceName, "MapToOutput"
+    };
+    if(rect)
+    {
+        std::ostringstream formatRect;
+        formatRect << rect->width << "+"
+            << rect->height << "+"
+            << rect->x << "+"
+            << rect->y;
+        args.emplace_back(formatRect.str());
+    }
+    else
+    {
+        args.emplace_back("desktop");
+    }
+
+    runXSetWacom(args);
+}
