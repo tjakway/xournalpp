@@ -247,11 +247,16 @@ void XSetWacomShell::setMapToOutput(
     runXSetWacom(args);
 }
 
-std::vector<std::string> XSetWacomShell::getDevices()
+std::string XSetWacomShell::getDevices()
 {
     //run the xsetwacom command
-    const std::string stdoutRes = 
-        runXSetWacom(std::vector<std::string>{ "--list", "--devices" });
+    return runXSetWacom(std::vector<std::string>{ "--list", "--devices" });
+}
+
+
+std::vector<std::string> XSetWacomShell::getDeviceLines()
+{
+    const std::string stdoutRes = getDevices();
 
     //divide the output into lines
     std::vector<std::string> lines;

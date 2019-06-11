@@ -24,13 +24,14 @@ class XSetWacomShell
 
     std::pair<int, int> getDimensions(const std::string&);
 
-    std::vector<std::string> getDevices();
-
 public:
     XSetWacomShell(const std::string&);
 
     double getMainDeviceAspectRatio(const std::string&);
     void setMapToOutput(const std::string&, Rectangle*);
+
+    virtual std::string getDevices();
+    virtual std::vector<std::string> getDeviceLines();
 
     virtual ~XSetWacomShell() {}
 };
