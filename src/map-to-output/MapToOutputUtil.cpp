@@ -122,3 +122,9 @@ Rectangle MapToOutputUtil::getAbsoluteWidgetRect(GtkWidget* widget)
     assert(alloc.height > 0);
     return Rectangle(x, y, alloc.width, alloc.height);
 }
+
+//see https://stackoverflow.com/questions/6444842/efficient-way-to-check-if-stdstring-has-only-spaces
+bool MapToOutputUtil::stringIsNonWhitespace(const std::string& str)
+{
+    return str.find_first_not_of(' ') != std::string::npos;
+}

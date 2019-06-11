@@ -12,12 +12,6 @@
 
 
 namespace {
-    //see https://stackoverflow.com/questions/6444842/efficient-way-to-check-if-stdstring-has-only-spaces
-    bool stringIsNonWhitespace(const std::string& str)
-    {
-        return str.find_first_not_of(' ') != std::string::npos;
-    }
-
     std::vector<std::string> stringToLines(const std::string& str)
     {
         std::vector<std::string> lines;

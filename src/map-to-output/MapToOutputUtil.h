@@ -21,5 +21,7 @@ public:
 
     static std::pair<int, int> getAbsoluteWidgetPosition(GtkWidget*);
     static Rectangle getAbsoluteWidgetRect(GtkWidget*);
+
+    static bool stringIsNonWhitespace(const std::string&);
 };
 
