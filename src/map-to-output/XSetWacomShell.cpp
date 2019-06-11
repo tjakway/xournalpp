@@ -180,8 +180,9 @@ std::pair<int, int> XSetWacomShell::getDimensions(
     const std::string stdoutRes = runXSetWacom(args);
     std::istringstream iss(stdoutRes);
 
-    vector<string> tokens{istream_iterator<string>{iss},
-                          istream_iterator<string>{}};
+    //from https://stackoverflow.com/a/237280/389943
+    std::vector<string> tokens{std::istream_iterator<string>{iss},
+                               std::istream_iterator<string>{}};
 
     const unsigned int expectedTokens = 4;
     if(tokens.size() != expectedTokens)
@@ -215,7 +216,7 @@ double XSetWacomShell::getMainDeviceAspectRatio(const std::string& deviceName)
     int w, h;
     std::tie(w, h) = getDimensions(deviceName);
 
-    return static_cast<double(w) / static_cast<double>(h);
+    return static_cast<double>(w) / static_cast<double>(h);
 }
 
 void XSetWacomShell::setMapToOutput(

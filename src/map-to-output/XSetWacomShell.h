@@ -4,6 +4,8 @@
 #include <utility>
 #include <vector>
 
+#include "util/Rectangle.h"
+
 #include "map-to-output/MapToOutputError.h"
 #include "map-to-output/MapToOutputConfig.h"
 
