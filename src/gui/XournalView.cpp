@@ -24,7 +24,9 @@
 #include <cmath>
 
 XournalView::XournalView(GtkWidget* parent, Control* control, ScrollHandling* scrollHandling, ZoomGesture* zoomGesture)
- : scrollHandling(scrollHandling),
+    //TODO: read config
+ : WithXSetWacomController(true),
+   scrollHandling(scrollHandling),
    control(control),
    zoomGesture(zoomGesture)
 {
@@ -50,6 +52,8 @@ XournalView::XournalView(GtkWidget* parent, Control* control, ScrollHandling* sc
 	gtk_widget_show(this->widget);
 
 	g_signal_connect(getWidget(), "realize", G_CALLBACK(onRealized), this);
+        g_signal_connect(getWidget(), 
+                "configure-event", G_CALLBACK(XournalView::onConfigureCallback), this);
 
 	this->repaintHandler = new RepaintHandler(this);
 	this->handRecognition = new HandRecognition(this->widget, inputContext, control->getSettings());
@@ -1115,4 +1119,10 @@ EditSelection* XournalView::getSelection()
 	g_return_val_if_fail(GTK_IS_XOURNAL(this->widget), NULL);
 
 	return GTK_XOURNAL(this->widget)->selection;
+}
+
+void XournalView::onConfigureCallback(void* data)
+{
+    XournalView* xournalView = static_cast<XournalView*>(data);
+    xournalView->onWindowChanged(xournalView->getWidget());
 }

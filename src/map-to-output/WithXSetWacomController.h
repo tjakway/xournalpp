@@ -13,5 +13,7 @@ class WithXSetWacomController
 public:
     WithXSetWacomController(bool);
 
+    void onWindowChanged(GtkWidget*);
+
     virtual ~WithXSetWacomController() {}
 };

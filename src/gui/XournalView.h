@@ -16,6 +16,7 @@
 #include "model/DocumentListener.h"
 #include "model/PageRef.h"
 #include "widgets/XournalWidget.h"
+#include "map-to-output/WithXSetWacomController.h"
 
 #include <Arrayiterator.h>
 
@@ -35,7 +36,10 @@ class ScrollHandling;
 class TextEditor;
 class HandRecognition;
 
-class XournalView : public DocumentListener, public ZoomListener
+class XournalView 
+    : public DocumentListener,
+      public ZoomListener,
+      public WithXSetWacomController
 {
 public:
 	XournalView(GtkWidget* parent, Control* control, ScrollHandling* scrollHandling, ZoomGesture* zoomGesture);
@@ -155,6 +159,8 @@ private:
 	void addLoadPageToQue(PageRef page, int priority);
 
 	Rectangle* getVisibleRect(size_t page);
+
+        static void onConfigureCallback(void*);
 
 	static gboolean clearMemoryTimer(XournalView* widget);
 

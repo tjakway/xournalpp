@@ -1,4 +1,5 @@
 #include "map-to-output/XSetWacomController.h"
+#include "map-to-output/MapToOutputUtil.h"
 
 
 XSetWacomController::XSetWacomController(MapToOutputConfig::Ptr _configPtr)
@@ -12,5 +13,22 @@ XSetWacomController::XSetWacomController(MapToOutputConfig::Ptr _configPtr)
 
 void XSetWacomController::setMapToOutput(int x, int y, int width, int height)
 {
-    //TODO: shell out
+    Rectangle r(x, y, width, height);
+    shell.setMapToOutput(mappedDeviceSet.mainDevice, &r);
+}
+
+void XSetWacomController::onWindowChanged(int x, int y, int width, int height)
+{
+    setMapToOutput(x, y, width, height);
+}
+
+void XSetWacomController::onWindowChanged(GtkWidget* widget)
+{
+    Rectangle widgetRect = MapToOutputUtil::getAbsoluteWidgetRect(widget);
+
+    onWindowChanged(
+        static_cast<int>(widgetRect.x),
+        static_cast<int>(widgetRect.y),
+        static_cast<int>(widgetRect.width),
+        static_cast<int>(widgetRect.height));
 }

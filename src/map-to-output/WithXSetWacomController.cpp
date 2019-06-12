@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_set>
 
+//TODO: read settings
 static const MapToOutputConfig::DeviceRegexes myDeviceRegexes {
     std::unordered_set<std::string> {
         "Wacom Intuos S 2 Pad pad",
@@ -11,17 +12,29 @@ static const MapToOutputConfig::DeviceRegexes myDeviceRegexes {
     },
     "Wacom Intuos S 2 Pen stylus"
 };
-    
+
+MapToOutputConfig::Ptr myConfig = std::make_shared<MapToOutputConfig>(myDeviceRegexes);
 
 WithXSetWacomController::WithXSetWacomController(bool enabled)
-    //TODO: read settings
-    : config(myDeviceRegexes)
+    : config(myConfig)
 {
     if(enabled)
     {
         controller = 
-            std::unique_ptr<XSetWacomController>(new XSetWacomController)
+            std::unique_ptr<XSetWacomController>(new XSetWacomController(config));
+    }
+    else
+    {
+        controller = nullptr;
     }
 }
 
 
+
+void WithXSetWacomController::onWindowChanged(GtkWidget* widget)
+{
+    if(controller)
+    {
+        controller->onWindowChanged(widget);
+    }
+}

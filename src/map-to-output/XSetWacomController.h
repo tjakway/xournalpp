@@ -22,7 +22,6 @@ public:
     virtual ~XSetWacomController() {}
 
     void setMapToOutput(int x, int y, int width, int height);
-    void setMapToOutput(GtkWidget*);
 
     void onWindowChanged(int x, int y, int width, int height);
     void onWindowChanged(GtkWidget*);
