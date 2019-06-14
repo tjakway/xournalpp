@@ -29,6 +29,7 @@ namespace {
             if(err != nullptr)
             {
                 g_error_free(err);
+                err = nullptr;
             }
         }
     };
@@ -45,7 +46,9 @@ namespace {
             argv = new char*[len + 1];
             //don't forget to null-terminate the array
             argv[len] = nullptr;
-            assert(strlen(*argv) == len);
+
+            int sLen = strlen(*argv);
+            assert(sLen == len);
 
 
             for(std::vector<std::string>::size_type i = 0; 
@@ -105,7 +108,7 @@ std::string XSetWacomShell::runXSetWacom(
 
 
 
-    GError* _launchError;
+    GError* _launchError = nullptr;
     gint exitStatus = 0;
 
 
@@ -155,7 +158,7 @@ std::string XSetWacomShell::runXSetWacom(
     }
     else
     {
-        GError* _checkExitError;
+        GError* _checkExitError = nullptr;
         const auto exitRes = g_spawn_check_exit_status(exitStatus, &_checkExitError);
 
         std::unique_ptr<GError, GErrorDeleter> checkExitError(_checkExitError);
