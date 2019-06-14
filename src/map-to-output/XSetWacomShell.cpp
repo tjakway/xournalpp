@@ -130,8 +130,24 @@ std::string XSetWacomShell::runXSetWacom(
 
     std::unique_ptr<GError, GErrorDeleter> launchError(_launchError);
 
+    const auto getStdout = [&stdoutBuf](){
+        if(stdoutBuf) {
+            return std::string(stdoutBuf.get());
+        } else {
+            return std::string();
+        }
+    };
+
+    const auto getStderr = [&stderrBuf](){
+        if(stderrBuf) {
+            return std::string(stderrBuf.get());
+        } else {
+            return std::string();
+        }
+    };
+
     //format and throw exception
-    const auto err = [&stdoutBuf, &stderrBuf, &exitStatus, &argvVector]
+    const auto err = [&getStdout, &getStderr, &exitStatus, &argvVector]
         (const GError& gError) {
 
         std::ostringstream ss;
@@ -144,8 +160,8 @@ std::string XSetWacomShell::runXSetWacom(
         ss << "`:" << std::endl
            << "\tglib error message: " << gError.message << std::endl
            << "\texit code: " << exitStatus << std::endl
-           << "\tstdout: " << *stdoutBuf << std::endl
-           << "\tstderr: " << *stderrBuf;
+           << "\tstdout: " << getStdout() << std::endl
+           << "\tstderr: " << getStderr();
 
         throw XSetWacomShellError(ss.str());
     };
