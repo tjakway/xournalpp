@@ -54,10 +54,17 @@ namespace {
             for(std::vector<std::string>::size_type i = 0; 
                     i < argvVector.size(); i++)
             {
-                const std::string& thisString = argvVector[i];
-                argv[i] = new char[thisString.size() + 1];
-                memcpy(argv[i], thisString.c_str(), thisString.size());
-                argv[i][len] = '\0';
+                const auto len = argvVector[i].size();
+                //allocate and null terminate string
+                char* dest = new char[len + 1];
+                dest[len + 1] = '\0';
+
+                //copy the string
+                void* ret = memcpy(dest, argvVector[i].c_str(), len);
+                assert(ret == dest);
+
+                //add it to argv
+                argv[i] = dest;
             }
         }
 
@@ -73,9 +80,9 @@ namespace {
 
         virtual ~ArgvWrapper()
         {
-            for(std::vector<std::string>::size_type i = 0; i < len; i++)
+            for(unsigned int i = 0; i < size(); i++)
             {
-               delete[] argv[i];
+                delete[] argv[i];
             }
             delete[] argv;
         }
