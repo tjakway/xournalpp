@@ -3,6 +3,7 @@
 #include "util/Rectangle.h"
 
 #include <utility>
+#include <stdexcept>
 
 #include <cairo/cairo.h>
 #include <gtk/gtk.h>
@@ -23,5 +24,17 @@ public:
     static Rectangle getAbsoluteWidgetRect(GtkWidget*);
 
     static bool stringIsNonWhitespace(const std::string&);
+
+    static std::string findProgramInPath(const std::string&);
+    static std::string findProgramInPath(const char*);
 };
 
+class ProgramNotFoundError : public std::runtime_error
+{
+public:
+    ProgramNotFoundError(const std::string& x)
+        : std::runtime_error(x)
+    {}
+
+    virtual ~ProgramNotFoundError() {}
+};

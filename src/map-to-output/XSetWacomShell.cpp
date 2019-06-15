@@ -39,10 +39,30 @@ namespace {
         char** argv;
         const std::vector<std::string>::size_type len;
 
-    public:
-        ArgvWrapper(const std::vector<std::string>& argvVector)
-            : len(argvVector.size())
+        std::vector<std::string> returnFullPathVector(
+                const std::vector<std::string>& vec)
         {
+            //look up the full path to the passed element
+            std::vector<std::string> fullPathVec;
+            const std::string fullPath = MapToOutputUtil::findProgramInPath(vec.at(0));
+
+            fullPathVec.emplace_back(fullPath);
+            //skip the first element
+            for(auto it = vec.begin()+1; it != vec.end(); ++it)
+            {
+                fullPathVec.emplace_back(*it);
+            }
+
+            return fullPathVec;
+        }
+
+    public:
+        ArgvWrapper(const std::vector<std::string>& passedVec)
+            : len(passedVec.size())
+        {
+            const std::vector<std::string> argvVector = 
+                returnFullPathVector(passedVec);
+
             argv = new char*[len];
 
             for(std::vector<std::string>::size_type i = 0; 
@@ -104,7 +124,6 @@ std::string XSetWacomShell::runXSetWacom(
 { 
     std::lock_guard<std::mutex> {exeMutex};
 
-    //need argvVector to be in scope while argv is active
     std::vector<std::string> argvVector = buildArgv(args);
     ArgvWrapper argv(argvVector);
 
@@ -119,7 +138,7 @@ std::string XSetWacomShell::runXSetWacom(
         nullptr, //working directory
         argv.getArgv(),
         nullptr, //inherit parent environment
-        G_SPAWN_SEARCH_PATH,
+        G_SPAWN_DEFAULT,
         nullptr, //no setup function
         nullptr, //no setup function args
         &_stdoutBuf,

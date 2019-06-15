@@ -7,9 +7,12 @@
 #include <utility>
 #include <tuple>
 #include <cassert>
+#include <cstdlib>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+
+#include <glib.h>
 
 class BadDimensionsError : public MapToOutputError
 {
@@ -127,4 +130,28 @@ Rectangle MapToOutputUtil::getAbsoluteWidgetRect(GtkWidget* widget)
 bool MapToOutputUtil::stringIsNonWhitespace(const std::string& str)
 {
     return str.find_first_not_of(' ') != std::string::npos;
+}
+
+std::string MapToOutputUtil::findProgramInPath(const std::string& progName)
+{
+    return findProgramInPath(progName.c_str());
+}
+
+std::string MapToOutputUtil::findProgramInPath(const char* progName)
+{
+    //see https://developer.gnome.org/glib/stable/glib-Miscellaneous-Utility-Functions.html#g-find-program-in-path
+    gchar* foundProg = g_find_program_in_path(progName);
+    if(foundProg)
+    {
+        std::string ret(foundProg);
+        free(foundProg);
+        return ret;
+    }
+    else
+    {
+        std::ostringstream ss;
+        ss << "Could not find program named " << progName <<
+            " in path";
+        throw ProgramNotFoundError(ss.str());
+    }
 }
