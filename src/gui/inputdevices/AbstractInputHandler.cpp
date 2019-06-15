@@ -4,13 +4,13 @@
 
 #include "AbstractInputHandler.h"
 #include "InputContext.h"
+#include <gui/XournalppCursor.h>
 
 AbstractInputHandler::AbstractInputHandler(InputContext* inputContext)
 {
 	XOJ_INIT_TYPE(AbstractInputHandler);
 
 	this->inputContext = inputContext;
-	this->pressureSensitivity = inputContext->getSettings()->isPresureSensitivity();
 }
 
 AbstractInputHandler::~AbstractInputHandler()
@@ -41,6 +41,7 @@ bool AbstractInputHandler::handle(InputEvent* event)
 
 	if (!this->blocked)
 	{
+		this->inputContext->getXournal()->view->getCursor()->setInputDeviceClass(event->deviceClass);
 		return this->handleImpl(event);
 	} else {
 		return true;
@@ -90,12 +91,12 @@ PositionInputData AbstractInputHandler::getInputDataRelativeToCurrentPage(XojPag
 	//take scroll offset into account
 	this->inputContext->getScrollHandling()->translate(eventX, eventY);
 
-	PositionInputData pos;
+	PositionInputData pos = {};
 	pos.x = eventX - page->getX() - xournal->x;
 	pos.y = eventY - page->getY() - xournal->y;
 	pos.pressure = Point::NO_PRESSURE;
 
-	if (pressureSensitivity)
+	if (this->inputContext->getSettings()->isPressureSensitivity())
 	{
 		pos.pressure = event->pressure;
 	}

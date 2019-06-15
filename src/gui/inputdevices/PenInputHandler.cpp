@@ -105,12 +105,22 @@ bool PenInputHandler::actionStart(InputEvent* event)
 	// set reference data for handling of entering/leaving page
 	this->updateLastEvent(event);
 
-	// Flag running input
-	this->inputRunning = true;
-	this->penInWidget = true;
-
 	// Change the tool depending on the key
 	changeTool(event);
+
+	// Flag running input
+	ToolHandler* toolHandler = this->inputContext->getToolHandler();
+	ToolType toolType = toolHandler->getToolType();
+
+	//
+	if (toolType != TOOL_IMAGE)
+	{
+		this->inputRunning = true;
+	} else {
+		this->deviceClassPressed = false;
+	}
+
+	this->penInWidget = true;
 
 	GtkXournal* xournal = this->inputContext->getXournal();
 
@@ -118,8 +128,6 @@ bool PenInputHandler::actionStart(InputEvent* event)
 	cursor->setMouseDown(true);
 
 
-	ToolHandler* toolHandler = this->inputContext->getToolHandler();
-	ToolType toolType = toolHandler->getToolType();
 
 	// Save the starting offset when hand-tool is selected to get a reference for the scroll-offset
 	if (toolType == TOOL_HAND)
@@ -251,7 +259,7 @@ bool PenInputHandler::actionMotion(InputEvent* event)
 		 * Only trigger once the new page was entered to ensure that an input device can leave the page temporarily.
 		 * For these events we need to fake an end point in the old page and a start point in the new page.
 		 */
-		if (currentPage && !lastEventPage && lastHitEventPage)
+		if (this->deviceClassPressed && currentPage && !lastEventPage && lastHitEventPage)
 		{
 #ifdef DEBUG_INPUT
 			g_message("PenInputHandler: Start new input on switching page...");
@@ -267,7 +275,7 @@ bool PenInputHandler::actionMotion(InputEvent* event)
 		 * Get all events where the input sequence started outside of a page and moved into one.
 		 * For these events we need to fake a start point in the current page.
 		 */
-		if (currentPage && !lastEventPage && !lastHitEventPage)
+		if (this->deviceClassPressed && currentPage && !lastEventPage && !lastHitEventPage)
 		{
 #ifdef DEBUG_INPUT
 			g_message("PenInputHandler: Start new input on entering page...");
@@ -283,7 +291,6 @@ bool PenInputHandler::actionMotion(InputEvent* event)
 
 	// Update the cursor
 	xournal->view->getCursor()->setInsidePage(currentPage != nullptr);
-	xournal->view->getCursor()->setInvisible(false);
 
 	// Selections and single-page elements will always work on one page so we need to handle them differently
 	if (this->sequenceStartPage && toolHandler->isSinglePageTool())
@@ -371,6 +378,7 @@ bool PenInputHandler::actionEnd(InputEvent* event)
 	}
 
 	this->inputRunning = false;
+	delete this->lastHitEvent;
 	this->lastHitEvent = nullptr;
 
 	return false;
