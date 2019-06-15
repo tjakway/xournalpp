@@ -125,24 +125,26 @@ std::string XSetWacomShell::runXSetWacom(
     std::lock_guard<std::mutex> {exeMutex};
 
     std::vector<std::string> argvVector = buildArgv(args);
+    ArgvWrapper argv(argvVector);
 
-    std::ostringstream ssArgv;
-    for(const auto& i : argvVector)
-    {
-        ssArgv << i << " ";
-    }
-    std::string argvStr = ssArgv.str();
+
 
     GError* _launchError = nullptr;
     gint exitStatus = 0;
 
+
     char *_stdoutBuf, *_stderrBuf;
-    const auto res = g_spawn_command_line_sync(
-            argvStr.c_str(),
-            &_stdoutBuf,
-            &_stderrBuf,
-            &exitStatus,
-            &_launchError);
+    const auto res = g_spawn_sync(
+        nullptr, //working directory
+        argv.getArgv(),
+        nullptr, //inherit parent environment
+        G_SPAWN_DEFAULT,
+        nullptr, //no setup function
+        nullptr, //no setup function args
+        &_stdoutBuf,
+        &_stderrBuf,
+        &exitStatus,
+        &_launchError);
 
     std::unique_ptr<char> stdoutBuf(_stdoutBuf),
         stderrBuf(_stderrBuf);
