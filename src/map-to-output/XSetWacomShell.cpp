@@ -57,7 +57,7 @@ namespace {
                 const auto len = argvVector[i].size();
                 //allocate and null terminate string
                 char* dest = new char[len + 1];
-                dest[len + 1] = '\0';
+                dest[len] = '\0';
 
                 //copy the string
                 void* ret = memcpy(dest, argvVector[i].c_str(), len);
@@ -66,6 +66,7 @@ namespace {
                 //add it to argv
                 argv[i] = dest;
             }
+            assert(argv != nullptr);
         }
 
         char** getArgv() const
