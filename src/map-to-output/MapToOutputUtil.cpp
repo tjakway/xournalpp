@@ -144,7 +144,7 @@ std::string MapToOutputUtil::findProgramInPath(const char* progName)
     if(foundProg)
     {
         std::string ret(foundProg);
-        g_string_free(foundProg);
+        free(foundProg);
         return ret;
     }
     else

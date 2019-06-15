@@ -34,19 +34,6 @@ namespace {
         }
     };
 
-    class GStringDeleter
-    {
-    public:
-        void operator()(char* str)
-        {
-            if(str != nullptr)
-            {
-                g_string_free(str);
-                err = nullptr;
-            }
-        }
-    };
-
     class ArgvWrapper
     {
         char** argv;
@@ -159,7 +146,7 @@ std::string XSetWacomShell::runXSetWacom(
         &exitStatus,
         &_launchError);
 
-    std::unique_ptr<char, GStringDeleter> stdoutBuf(_stdoutBuf),
+    std::unique_ptr<char> stdoutBuf(_stdoutBuf),
         stderrBuf(_stderrBuf);
 
     std::unique_ptr<GError, GErrorDeleter> launchError(_launchError);
