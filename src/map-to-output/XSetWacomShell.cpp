@@ -43,13 +43,7 @@ namespace {
         ArgvWrapper(const std::vector<std::string>& argvVector)
             : len(argvVector.size())
         {
-            argv = new char*[len + 1];
-            //don't forget to null-terminate the array
-            argv[len] = nullptr;
-
-            int sLen = strlen(*argv);
-            assert(sLen == len);
-
+            argv = new char*[len];
 
             for(std::vector<std::string>::size_type i = 0; 
                     i < argvVector.size(); i++)
@@ -162,7 +156,7 @@ std::string XSetWacomShell::runXSetWacom(
         ss << "Error running `";
         for(const auto& thisArg : argvVector)
         {
-            ss << "thisArg " << thisArg;
+            ss << thisArg << " ";
         }
         //just ignore the dangling space
         ss << "`:" << std::endl
