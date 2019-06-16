@@ -118,13 +118,13 @@ namespace {
 
     std::string extractDeviceName(const std::string& thisLine)
     {
-        static const std::regex deviceNameFieldRegex {
-            R"RAW(^\s*([\w\d]\s+([\w\d]+)?|[\w\d])+(?=\s+id: \d+\s+type:\s+\w+))RAW"
-        };
+        static const std::string deviceNameFieldRegexStr = 
+            R"RAW(^\s*([\w\d]\s+([\w\d]+)?|[\w\d])+(?=\s+id: \d+\s+type:\s+\w+))RAW";
+        static const std::regex deviceNameFieldRegex(deviceNameFieldRegexStr);
 
         //see https://www.regular-expressions.info/stdregex.html
-        std::smatch s;
-        if(std::regex_search(thisLine, s, deviceNameFieldRegex) && match.size() > 1)
+        std::smatch match;
+        if(std::regex_search(thisLine, match, deviceNameFieldRegex) && match.size() > 1)
         {
             return match.str(0);
         }
@@ -132,7 +132,7 @@ namespace {
         {
             std::ostringstream ss;
             ss << "Could not find match for regex << " <<
-                deviceNameFieldRegex << 
+                deviceNameFieldRegexStr << 
                 " >> in device name " << thisLine;
 
             throw DeviceNameExtractionError(ss.str());
