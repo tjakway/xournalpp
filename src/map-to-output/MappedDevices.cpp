@@ -142,7 +142,14 @@ namespace {
     std::vector<std::string> extractDeviceNames(
             const std::vector<std::string>& lines)
     {
-        
+        std::vector<std::string> extractedNames;
+
+        for(const auto& i : lines)
+        {
+            extractedNames.emplace_back(extractDeviceName(i));
+        }
+
+        return extractedNames;
     }
 }
 
