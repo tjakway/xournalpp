@@ -171,13 +171,9 @@ std::string XSetWacomShell::runXSetWacom(
         (const GError& gError) {
 
         std::ostringstream ss;
-        ss << "Error running `";
-        for(const auto& thisArg : argvVector)
-        {
-            ss << thisArg << " ";
-        }
-        //just ignore the dangling space
-        ss << "`:" << std::endl
+        ss << "Error running `" 
+           << ssArgv
+           << "`:" << std::endl
            << "\tglib error message: " << gError.message << std::endl
            << "\texit code: " << exitStatus << std::endl
            << "\tstdout: " << getStdout() << std::endl
@@ -186,13 +182,7 @@ std::string XSetWacomShell::runXSetWacom(
         throw XSetWacomShellError(ss.str());
     };
 
-    if(!res)
-    {
-        err(*launchError);
-        //silence return warnings
-        return nullptr;
-    }
-    else
+    if(res)
     {
         GError* _checkExitError = nullptr;
         const auto exitRes = g_spawn_check_exit_status(exitStatus, &_checkExitError);
@@ -208,6 +198,12 @@ std::string XSetWacomShell::runXSetWacom(
         {
             return std::string(stdoutBuf.get());
         }
+    }
+    else
+    {
+        err(*launchError);
+        //silence return warnings
+        return nullptr;
     }
 
 }
