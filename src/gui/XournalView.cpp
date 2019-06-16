@@ -50,10 +50,9 @@ XournalView::XournalView(GtkWidget* parent, Control* control, ScrollHandling* sc
 
 	gtk_container_add(GTK_CONTAINER(parent), this->widget);
 	gtk_widget_show(this->widget);
-
-	g_signal_connect(getWidget(), "realize", G_CALLBACK(onRealized), this);
         g_signal_connect(getWidget(), 
-                "configure-event", G_CALLBACK(XournalView::onConfigureCallback), this);
+            "configure-event", G_CALLBACK(XournalView::onConfigureCallback), this);
+	g_signal_connect(getWidget(), "realize", G_CALLBACK(onRealized), this);
 
 	this->repaintHandler = new RepaintHandler(this);
 	this->handRecognition = new HandRecognition(this->widget, inputContext, control->getSettings());
@@ -1121,8 +1120,10 @@ EditSelection* XournalView::getSelection()
 	return GTK_XOURNAL(this->widget)->selection;
 }
 
-void XournalView::onConfigureCallback(void* data)
+gboolean XournalView::onConfigureCallback(GtkWidget*, GdkEvent*, void* data)
 {
+    g_debug("XournalView::onConfigureCallback called");
     XournalView* xournalView = static_cast<XournalView*>(data);
     xournalView->onWindowChanged(xournalView->getWidget());
+    return false;
 }

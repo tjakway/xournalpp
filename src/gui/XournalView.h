@@ -160,7 +160,7 @@ private:
 
 	Rectangle* getVisibleRect(size_t page);
 
-        static void onConfigureCallback(void*);
+        static gboolean onConfigureCallback(GtkWidget*, GdkEvent*, gpointer);
 
 	static gboolean clearMemoryTimer(XournalView* widget);
 

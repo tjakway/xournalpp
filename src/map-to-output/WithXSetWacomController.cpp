@@ -4,6 +4,8 @@
 #include <memory>
 #include <unordered_set>
 
+#include <glib.h>
+
 //TODO: read settings
 static const MapToOutputConfig::DeviceRegexes myDeviceRegexes {
     std::unordered_set<std::string> {
@@ -33,6 +35,7 @@ WithXSetWacomController::WithXSetWacomController(bool enabled)
 
 void WithXSetWacomController::onWindowChanged(GtkWidget* widget)
 {
+    g_debug("WithXSetWacomController::onWindowChanged called");
     if(controller)
     {
         controller->onWindowChanged(widget);
