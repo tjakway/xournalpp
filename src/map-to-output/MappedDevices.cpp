@@ -5,7 +5,6 @@
 #include <sstream>
 #include <regex>
 #include <algorithm>
-
 #include <memory>
 
 //for g_warning
@@ -115,6 +114,14 @@ namespace {
                     "no device regexes will match");
         }
         return deviceList;
+    }
+
+    std::vector<std::string> extractDeviceNames(
+            const std::vector<std::string>& lines)
+    {
+        static const std::regex deviceNameFieldRegex {
+            R"RAW(^\s*[\w\d][\w\d\s]+(?=\s+id: \d+\s+type:\s+\w+))RAW"
+        };
     }
 }
 
