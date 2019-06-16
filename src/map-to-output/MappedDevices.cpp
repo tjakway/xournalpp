@@ -169,7 +169,8 @@ MappedDevices::MappedDevices(
             getMatches(deviceRegexes.mainDevice,
                 stringsToRegexes(deviceRegexes.deviceRegexes.cbegin(), 
                     deviceRegexes.deviceRegexes.cend()),
-            stringToLines(warnIfDeviceListIsEmpty(printedDeviceList))))
+                extractDeviceNames(
+                    stringToLines(warnIfDeviceListIsEmpty(printedDeviceList)))))
 {}
 
 MappedDevices::MappedDevices(const MappedDevices& other)

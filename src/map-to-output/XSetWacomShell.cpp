@@ -145,6 +145,8 @@ std::string XSetWacomShell::runXSetWacom(
             &exitStatus,
             &_launchError);
 
+    g_debug("Called `%s`", argvStr.c_str());
+
     std::unique_ptr<char> stdoutBuf(_stdoutBuf),
         stderrBuf(_stderrBuf);
 
@@ -167,12 +169,12 @@ std::string XSetWacomShell::runXSetWacom(
     };
 
     //format and throw exception
-    const auto err = [&getStdout, &getStderr, &exitStatus, &argvVector]
+    const auto err = [&getStdout, &getStderr, &exitStatus, &argvVector, &argvStr]
         (const GError& gError) {
 
         std::ostringstream ss;
         ss << "Error running `" 
-           << ssArgv
+           << argvStr
            << "`:" << std::endl
            << "\tglib error message: " << gError.message << std::endl
            << "\texit code: " << exitStatus << std::endl

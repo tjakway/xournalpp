@@ -24,6 +24,8 @@ class XSetWacomShell
 
     std::pair<int, int> getDimensions(const std::string&);
 
+
+
 public:
     XSetWacomShell(const std::string&);
 

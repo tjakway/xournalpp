@@ -35,11 +35,23 @@ public:
 
 
 //mapped device related errors
-class MainDeviceError : public MapToOutputError
+
+class MappedDevicesError : public MapToOutputError
+{
+public:
+    MappedDevicesError(const std::string& x)
+        : MapToOutputError(x)
+    {}
+
+    virtual ~MappedDevicesError() {}
+};
+
+
+class MainDeviceError : public MappedDevicesError
 {
 public:
     MainDeviceError(const std::string& x)
-        : MapToOutputError(x)
+        : MappedDevicesError(x)
     {}
 
     virtual ~MainDeviceError() {}
@@ -63,4 +75,14 @@ public:
     {}
 
     virtual ~NoMainDeviceError() {}
+};
+
+class DeviceNameExtractionError : public MappedDevicesError
+{
+public:
+    DeviceNameExtractionError(const std::string& x)
+        : MappedDevicesError(x)
+    {}
+
+    virtual ~DeviceNameExtractionError() {}
 };
