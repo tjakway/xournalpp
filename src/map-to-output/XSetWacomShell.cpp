@@ -126,10 +126,11 @@ std::string XSetWacomShell::runXSetWacom(
 
     std::vector<std::string> argvVector = buildArgv(args);
 
+    //format arguments into a command line string
     std::ostringstream ssArgv;
     for(const auto& i : argvVector)
     {
-        ssArgv << i << " ";
+        ssArgv << "'" << i << "' ";
     }
     std::string argvStr = ssArgv.str();
 
