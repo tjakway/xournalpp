@@ -152,6 +152,7 @@ public:
 	bool onKeyReleaseEvent(GdkEventKey* event);
 
 	static void onRealized(GtkWidget* widget, XournalView* view);
+        static gboolean onConfigure(GtkWidget*, GdkEvent*, gpointer);
 
 private:
 	void fireZoomChanged();
@@ -159,8 +160,6 @@ private:
 	void addLoadPageToQue(PageRef page, int priority);
 
 	Rectangle* getVisibleRect(size_t page);
-
-        static gboolean onConfigureCallback(GtkWidget*, GdkEvent*, gpointer);
 
 	static gboolean clearMemoryTimer(XournalView* widget);
 

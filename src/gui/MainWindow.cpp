@@ -32,6 +32,14 @@
 #include <util/DeviceListHelper.h>
 #include <gui/inputdevices/InputEvents.h>
 
+static gboolean mainWindowOnConfigureCallback(GtkWidget*, GdkEvent*, void* data)
+{
+    g_debug("mainWindowOnConfigureCallback called");
+    XournalView* xournalView = static_cast<XournalView*>(data);
+    xournalView->onWindowChanged(xournalView->getWidget());
+    return false;
+}
+
 MainWindow::MainWindow(GladeSearchpath* gladeSearchPath, Control* control)
  : GladeGui(gladeSearchPath, "main.glade", "mainWindow"),
    ignoreNextHideEvent(false)
@@ -64,6 +72,10 @@ MainWindow::MainWindow(GladeSearchpath* gladeSearchPath, Control* control)
 	g_signal_connect(this->window, "window_state_event", G_CALLBACK(windowStateEventCallback), this);
 
 	g_signal_connect(get("buttonCloseSidebar"), "clicked", G_CALLBACK(buttonCloseSidebarClicked), this);
+
+        g_signal_connect(this->window, "configure-event",
+                G_CALLBACK(XournalView::onConfigure),
+                this->xournal);
 		
 
 	// "watch over" all events
